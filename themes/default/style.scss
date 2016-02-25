@@ -1,0 +1,69 @@
+@charset "UTF-8";
+
+body {
+	font-family: "Book Antiqua", Palatino, "Palatino Linotype", Georgia, serif;
+	background-image: url("background.png");
+	background-attachment: fixed;
+	background-color: #333;
+	padding: 6rem 2rem 2rem;
+	font-size: 1.1rem;
+	position: relative;
+}
+
+header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3rem;
+
+	display: block;
+	background-color: #222a4e;
+	padding: 0.6rem;
+	font-size: 1.25rem;
+	color: #fff;
+
+	h1 {
+		margin: 0 0 0 18px;
+	}
+	ul {
+		float: right;
+		margin-top: 0.8rem;
+		margin-right: 0.4rem;
+		li {
+			display: inline-block;
+			margin-right: 0.8rem;
+			ul {
+				position: absolute;
+				right: 0;
+				top: 100%;
+				margin: -20px 0 0;
+				padding: 30px 10px 10px;
+				text-align: right;
+				display: none;
+				background-color: #222a4e;
+				li {
+					display: block;
+					margin-right: 0;
+				}
+				&:hover,
+				&:focus {
+					display: block;
+				}
+			}
+			a {
+				color: #fff;
+				text-decoration: none;
+				&:hover + ul,
+				&:focus + ul {
+					display: block;
+				}
+			}
+		}
+	}
+}
+
+footer {
+	margin-top: 4rem;
+	text-align: center;
+}
