@@ -2,9 +2,6 @@
 [Tt]humbs.db
 *.DS_Store
 
-# Ignore the contents of the content directory
-content/
-
 # Development files
 .idea/
 .idea/vcs.xml
