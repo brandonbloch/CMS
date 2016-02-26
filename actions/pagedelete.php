@@ -76,19 +76,18 @@ if (isset($_POST["page_delete_submit"])) {
 
 }
 
-?>
-
-<html>
+?><!DOCTYPE html>
+<html lang="<?php echo \CMS\Localization::getLanguageCode(); ?>">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo LABEL_DELETE_PAGE; ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<title><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_DELETE_PAGE); ?> - <?php echo CMS\Site::getTitle() ?></title>
 	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
 <body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page cms-page-delete">
 
 <div class="cms-admin-page-interior">
 
-	<h1><i class="fa fa-<?php echo ICON_DELETE_PAGE; ?>"></i><?php echo LABEL_DELETE_PAGE; ?></h1>
+	<h1><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE); ?>"></i><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_DELETE_PAGE); ?></h1>
 
 	<form class="cms-form no-label-form" action="" method="post">
 
@@ -132,7 +131,7 @@ if (isset($_POST["page_delete_submit"])) {
 		</section>
 
 		<input type="hidden" name="page_delete_submit">
-		<button type="submit" class="delete-button"><i class="fa fa-<?php echo ICON_DELETE_PAGE; ?>"></i> Delete</button>
+		<button type="submit" class="delete-button"><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE); ?>"></i> <?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::BUTTON_DELETE); ?></button>
 
 		<a href="<?php echo CMS\Site::getBaseURL(); ?>?pages" class="cancel-button">cancel</a>
 

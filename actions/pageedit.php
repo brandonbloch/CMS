@@ -71,19 +71,18 @@ if (isset($_POST["page_edit_submit"])) {
 
 }
 
-?>
-
-<html>
+?><!DOCTYPE html>
+<html lang="<?php echo \CMS\Localization::getLanguageCode(); ?>">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo LABEL_EDIT_PAGE; ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<title><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE); ?> - <?php echo CMS\Site::getTitle() ?></title>
 	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
 <body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page cms-page-edit">
 
 <div class="cms-admin-page-interior">
 
-	<h1><i class="fa fa-<?php echo ICON_EDIT_PAGE; ?>"></i><?php echo LABEL_EDIT_PAGE; ?></h1>
+	<h1><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE); ?>"></i><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE); ?></h1>
 
 	<form class="cms-form" action="" method="post">
 
@@ -116,7 +115,7 @@ if (isset($_POST["page_edit_submit"])) {
 
 
 		<input type="hidden" name="page_edit_submit">
-		<button type="submit"><i class="fa fa-check-circle"></i> <?php echo BUTTON_SAVE; ?></button>
+		<button type="submit"><i class="fa fa-check-circle"></i> <?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::BUTTON_SAVE); ?></button>
 
 	</form>
 

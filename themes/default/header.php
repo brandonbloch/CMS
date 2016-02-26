@@ -1,4 +1,5 @@
-<html class="<?php echo CMS\Theme::getHTMLClasses() ?>">
+<!DOCTYPE html>
+<html lang="<?php echo \CMS\Localization::getLanguageCode() ?>">
 <head>
 	<meta charset="utf-8">
 	<meta name="description" content="<?php echo CMS\Site::getDescription() ?>">
@@ -14,6 +15,6 @@
 <body class="<?php echo CMS\Theme::getBodyClasses() ?>">
 
 <header>
-	<?php echo CMS\Theme::getNavigationMenu(); ?>
+	<?php echo CMS\Theme::getNavigationMenu() ?>
 	<h1><a href="<?php echo CMS\Site::getBaseURL() ?>"><?php echo CMS\Site::getTitle() ?></a></h1>
 </header>

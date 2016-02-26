@@ -138,11 +138,11 @@ class Pages {
 			$string .= '<td>' . $page->getShortname() . '</td>' . PHP_EOL;
 
 			$string .= '<td class="actions-list">';
-			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&redirect=pages" title="' . LABEL_EDIT_PAGE . '"><i class="fa fa-' . ICON_EDIT_PAGE . '"></i></a>';
+			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&redirect=pages" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE) . '"></i></a>';
 			if ($page->isHomepage()) {
-				$string .= '<a disabled title="' . LABEL_HOMEPAGE_NO_DELETE . '"><i class="fa fa-' . ICON_DELETE_PAGE . '"></i></a>';
+				$string .= '<a disabled title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOMEPAGE_NO_DELETE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			} else {
-				$string .= '<a href="' . Site::getBaseURL() . '?delete=' . $page->getID() . '" title="' . LABEL_DELETE_PAGE . '"><i class="fa fa-' . ICON_DELETE_PAGE . '"></i></a>';
+				$string .= '<a href="' . Site::getBaseURL() . '?delete=' . $page->getID() . '" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_DELETE_PAGE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			}
 			$string .= '</td>' . PHP_EOL;
 			$string .= '</tr>' . PHP_EOL;

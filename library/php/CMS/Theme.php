@@ -111,19 +111,10 @@ class Theme extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getHTMLClasses() {
-		// TODO implement this function
-		return "logged-in";
-	}
-
-	/**
-	 * @return string
-	 */
 	public static function getBodyClasses() {
 		// TODO implement this function
 		return "logged-in";
 	}
-
 
 	/**
 	 * @param string $themeName

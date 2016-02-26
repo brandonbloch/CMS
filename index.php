@@ -2,7 +2,6 @@
 
 // get the configuration options
 require_once "configuration.php";
-require_once "localization.php";
 
 // include the library/php directory for class auto-loading
 spl_autoload_register(function($class) {

@@ -4,7 +4,7 @@ CMS\Theme::includeHeader();
 
 ?>
 
-	<h1><?php echo LABEL_404; ?></h1>
+	<h1><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_404); ?></h1>
 
 	<p>The page you requested is not available.</p>
 

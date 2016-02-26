@@ -47,19 +47,18 @@ if (isset($_POST["page_add_submit"])) {
 
 }
 
-?>
-
-<html>
+?><!DOCTYPE html>
+<html lang="<?php echo \CMS\Localization::getLanguageCode(); ?>">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo LABEL_ADD_PAGE; ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<title><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_ADD_PAGE); ?> - <?php echo CMS\Site::getTitle() ?></title>
 	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
 <body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page cms-page-add">
 
 <div class="cms-admin-page-interior">
 
-	<h1><i class="fa fa-<?php echo ICON_ADD_PAGE; ?>"></i><?php echo LABEL_ADD_PAGE; ?></h1>
+	<h1><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_ADD_PAGE); ?>"></i><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_ADD_PAGE); ?></h1>
 
 	<form class="cms-form" action="" method="post">
 
@@ -113,7 +112,7 @@ if (isset($_POST["page_add_submit"])) {
 		<?php } ?>
 
 		<input type="hidden" name="page_add_submit">
-		<button type="submit"><i class="fa fa-check-circle"></i> Create</button>
+		<button type="submit"><i class="fa fa-check-circle"></i> <?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::BUTTON_CREATE); ?></button>
 
 	</form>
 
