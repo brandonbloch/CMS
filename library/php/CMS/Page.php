@@ -56,7 +56,7 @@ class Page extends ActiveRecordAbstract {
 	 * @return Page
 	 */
 	public static function withID($id) {
-		if (!Validate::int($id)) {
+		if (!Library\Validate::int($id)) {
 			throw new \InvalidArgumentException("Page::withID expected int, got " . gettype($id) . " instead.");
 		}
 		$id = (int) $id;
@@ -84,7 +84,7 @@ class Page extends ActiveRecordAbstract {
 	 * @return Page
 	 */
 	public static function withSlug($slug) {
-		if (!Validate::plainText($slug)) {
+		if (!Library\Validate::plainText($slug)) {
 			throw new \OutOfRangeException("Invalid slug supplied to Page::withSlug.");
 		}
 		try {
@@ -234,7 +234,7 @@ class Page extends ActiveRecordAbstract {
 	}
 
 	public function setParentID($id) {
-		if (!Validate::int($id)) {
+		if (!Library\Validate::int($id)) {
 			throw new \InvalidArgumentException("setParentID expected int, got " . gettype($id) . " instead.");
 		}
 		$this->parentID = (int) $id;
@@ -333,7 +333,7 @@ class Page extends ActiveRecordAbstract {
 	 * @param string $title
 	 */
 	public function setTitle($title) {
-		if (!Validate::plainText($title, true)) {
+		if (!Library\Validate::plainText($title, true)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setTitle.");
 		}
 		$this->title = $title;
@@ -350,7 +350,7 @@ class Page extends ActiveRecordAbstract {
 	 * @param string $shortname
 	 */
 	public function setShortname($shortname) {
-		if (!Validate::plainText($shortname)) {
+		if (!Library\Validate::plainText($shortname)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setShortname.");
 		}
 		$this->shortname = $shortname;
@@ -367,7 +367,7 @@ class Page extends ActiveRecordAbstract {
 	 * @param string $slug
 	 */
 	public function setSlug($slug) {
-		if (!Validate::slug($slug)) {
+		if (!Library\Validate::slug($slug)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setSlug.");
 		}
 		$this->slug = $slug;
@@ -384,7 +384,7 @@ class Page extends ActiveRecordAbstract {
 	 * @param string $content
 	 */
 	public function setContent($content) {
-		if (!Validate::plainText($content, true)) {
+		if (!Library\Validate::plainText($content, true)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setContent.");
 		}
 		$this->content = $content;

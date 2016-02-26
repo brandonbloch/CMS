@@ -33,7 +33,7 @@ class Theme extends SettingAbstract {
 	}
 
 	public static function setColorScheme($code) {
-		if (!Validate::int($code)) {
+		if (!Library\Validate::int($code)) {
 			throw new \InvalidArgumentException("Theme::setColorScheme expected int, got " . gettype($code) . " instead.");
 		}
 		if (!array_key_exists($code, self::$colorSchemes)) {
@@ -74,7 +74,7 @@ class Theme extends SettingAbstract {
 		if (!is_string($theme)) {
 			throw new \InvalidArgumentException("Theme::setActiveTheme expected string, got " . gettype($theme) . " instead.");
 		}
-		if (!Validate::plainText($theme)) {
+		if (!Library\Validate::plainText($theme)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to Theme::setActiveTheme.");
 		}
 		self::$activeTheme = $theme;
@@ -112,8 +112,20 @@ class Theme extends SettingAbstract {
 	 * @return string
 	 */
 	public static function getBodyClasses() {
-		// TODO implement this function
-		return "logged-in";
+		$classes = "";
+		// TODO implement this properly
+		$classes = self::addClass($classes, "logged-in");
+		if (isset($_GET["edit"]) && !isset($_GET["settings"])) {
+			$classes = self::addClass($classes, "editing");
+		}
+		return $classes;
+	}
+
+	private static function addClass($string, $class) {
+		if ($string == "") {
+			return $class;
+		}
+		return $string . " " . $class;
 	}
 
 	/**
@@ -126,7 +138,7 @@ class Theme extends SettingAbstract {
 		if (!file_exists($file)) {
 			throw new \RuntimeException("Theme file missing from theme '" . $themeName . "' folder.");
 		}
-		return json_decode(Format::convertSmartQuotes(file_get_contents($file)), true);
+		return json_decode(Library\Format::convertSmartQuotes(file_get_contents($file)), true);
 	}
 
 	/**

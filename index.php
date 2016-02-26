@@ -13,16 +13,21 @@ spl_autoload_register(function($class) {
 
 
 
+// Error handlers
+
+// 404 page was redirected to this page by .htaccess
+if (isset($_GET["404"])) {
+	CMS\Site::set404Response();
+}
+// 403 page was redirected to this page by .htaccess
+if (isset($_GET["403"])) {
+	\CMS\Site::set403Response();
+}
 
 // begin main pageloader action
 
 if (file_exists(CMS\Theme::getThemeDirectory() . "/theme.php")) {
 	include_once CMS\Theme::getThemeDirectory() . "/theme.php";
-}
-
-// 404 page was redirected to this page by .htaccess
-if (isset($_GET["notfound"])) {
-	CMS\Site::set404Response();
 }
 
 // logout process requested
@@ -72,13 +77,17 @@ if (isset($_GET["id"])) {
 }
 
 // delete page requested by page ID
-if (isset($_GET["delete"]) && CMS\Validate::int($_GET["delete"])) {
+if (isset($_GET["delete"]) && CMS\Library\Validate::int($_GET["delete"])) {
 	include "actions/pagedelete.php";
 	die();
 }
 
 // edit page requested by page ID
-if (isset($_GET["edit"]) && CMS\Validate::int($_GET["edit"])) {
+if (isset($_GET["edit"]) && CMS\Library\Validate::int($_GET["edit"])) {
+	if (isset($_GET["settings"])) {
+		include "actions/pagesettings.php";
+		die();
+	}
 	include "actions/pageedit.php";
 	die();
 }

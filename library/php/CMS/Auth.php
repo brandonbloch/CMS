@@ -295,10 +295,10 @@ class Auth {
 	 */
 	public static function passMatch($password1, $password2) {
 		self::initialize();
-		if (Validate::password($password1) === false) {
+		if (Library\Validate::password($password1) === false) {
 			return false;
 		}
-		if (Validate::password($password2) === false) {
+		if (Library\Validate::password($password2) === false) {
 			return false;
 		}
 		return ($password1 === $password2);

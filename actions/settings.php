@@ -7,16 +7,19 @@ $data = array(
 	"admin_email" => CMS\Site::getAdminEmail(),
 );
 
-$errors = new CMS\MessageCollector();
+$errors = new CMS\Library\MessageCollector();
 
 if (isset($_POST["settings_submit"])) {
+
+	$changes = false;
 
 	if ($_POST["site_title"] !== $data["site_title"]) {
 		$data["site_title"] = $_POST["site_title"];
 		try {
 			CMS\Site::setTitle($data["site_title"]);
+			$changes = true;
 		} catch (InvalidArgumentException $e) {
-			$errors->addMessage("The site title you entered is invalid.", CMS\MessageCollector::WARNING);
+			$errors->addMessage("The site title you entered is invalid.", CMS\Library\MessageCollector::WARNING);
 		}
 	}
 
@@ -24,25 +27,29 @@ if (isset($_POST["settings_submit"])) {
 		$data["site_description"] = $_POST["site_description"];
 		try {
 			CMS\Site::setDescription($data["site_description"]);
+			$changes = true;
 		} catch (InvalidArgumentException $e) {
-			$errors->addMessage("The site description you entered is invalid.", CMS\MessageCollector::WARNING);
+			$errors->addMessage("The site description you entered is invalid.", CMS\Library\MessageCollector::WARNING);
 		}
 	}
 
 	if ($_POST["active_theme"] !== CMS\Theme::getActiveTheme()) {
 		CMS\Theme::setActiveTheme($_POST["active_theme"]);
+		$changes = true;
 	}
 
 	if ($_POST["color_scheme"] !== CMS\Theme::getColorScheme()) {
 		CMS\Theme::setColorScheme($_POST["color_scheme"]);
+		$changes = true;
 	}
 
 	if ($_POST["admin_name"] !== $data["admin_name"]) {
 		$data["admin_name"] = $_POST["admin_name"];
 		try {
 			CMS\Site::setAdminName($data["admin_name"]);
+			$changes = true;
 		} catch (InvalidArgumentException $e) {
-			$errors->addMessage("The administrator name you entered is invalid.", CMS\MessageCollector::WARNING);
+			$errors->addMessage("The administrator name you entered is invalid.", CMS\Library\MessageCollector::WARNING);
 		}
 	}
 
@@ -50,9 +57,14 @@ if (isset($_POST["settings_submit"])) {
 		$data["admin_email"] = $_POST["admin_email"];
 		try {
 			CMS\Site::setAdminEmail($data["admin_email"]);
+			$changes = true;
 		} catch (InvalidArgumentException $e) {
-			$errors->addMessage("The administrator email you entered is invalid.", CMS\MessageCollector::WARNING);
+			$errors->addMessage("The administrator email you entered is invalid.", CMS\Library\MessageCollector::WARNING);
 		}
+	}
+
+	if (!$changes) {
+		$errors->addMessage("There are no changes to save.", \CMS\Library\MessageCollector::INFO);
 	}
 
 }

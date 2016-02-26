@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS;
+namespace CMS\Library;
 
 /**
  * Format class

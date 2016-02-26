@@ -1,14 +1,14 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_404); ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<title><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_403); ?> - <?php echo CMS\Site::getTitle() ?></title>
 	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
 <body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page">
 
 <div class="cms-admin-page-interior">
 
-	<h1><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_404); ?></h1>
+	<h1><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_403); ?></h1>
 
 	<p>The page you requested is not available.</p>
 

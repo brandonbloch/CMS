@@ -10,9 +10,11 @@ class Localization {
 	const LABEL_EDIT_PAGE = 3;
 	const LABEL_DELETE_PAGE = 4;
 	const LABEL_HOMEPAGE_NO_DELETE = 5;
-	const LABEL_SETTINGS = 6;
-	const LABEL_LOGOUT = 7;
-	const LABEL_404 = 8;
+	const LABEL_PAGE_SETTINGS = 6;
+	const LABEL_SETTINGS = 7;
+	const LABEL_LOGOUT = 8;
+	const LABEL_403 = 9;
+	const LABEL_404 = 10;
 
 	const BUTTON_CREATE = 20;
 	const BUTTON_SAVE = 21;
@@ -23,8 +25,9 @@ class Localization {
 	const ICON_ADD_PAGE = 42;
 	const ICON_EDIT_PAGE = 43;
 	const ICON_DELETE_PAGE = 44;
-	const ICON_SETTINGS = 45;
-	const ICON_LOGOUT = 46;
+	const ICON_PAGE_SETTINGS = 45;
+	const ICON_SETTINGS = 46;
+	const ICON_LOGOUT = 47;
 
 
 	const DEFAULT_LANGUAGE = "English";
@@ -40,20 +43,23 @@ class Localization {
 			self::LABEL_HOME => "Home",
 			self::LABEL_MANAGE_PAGES => "Manage Pages",
 			self::LABEL_ADD_PAGE => "Create New Page",
-			self::LABEL_EDIT_PAGE => "Page Settings",
+			self::LABEL_EDIT_PAGE => "Edit Page",
 			self::LABEL_DELETE_PAGE => "Delete Page",
 			self::LABEL_HOMEPAGE_NO_DELETE => "The homepage cannot be deleted",
+			self::LABEL_PAGE_SETTINGS => "Page Settings",
 			self::LABEL_SETTINGS => "Preferences",
 			self::LABEL_LOGOUT => "Log Out",
-			self::LABEL_404 => "Page Not Found",
+			self::LABEL_403 => "Forbidden",
+			self::LABEL_404 => "Not Found",
 			self::BUTTON_CREATE => "Create",
 			self::BUTTON_SAVE => "Save",
 			self::BUTTON_DELETE => "Delete",
 			self::ICON_HOME => "home",
 			self::ICON_MANAGE_PAGES => "bars",
 			self::ICON_ADD_PAGE => "plus",
-			self::ICON_EDIT_PAGE => "wrench",
+			self::ICON_EDIT_PAGE => "arrows",
 			self::ICON_DELETE_PAGE => "trash-o",
+			self::ICON_PAGE_SETTINGS => "wrench",
 			self::ICON_SETTINGS => "gear",
 			self::ICON_LOGOUT => "sign-out",
 		),

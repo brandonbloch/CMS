@@ -62,7 +62,7 @@ body.logged-in {
 	margin: 0 5px;
 	width: 32px;
 	height: 36px;
-	padding-top: 8px;
+	padding-top: 6px;
 	text-align: center;
 	cursor: pointer;
 	position: relative;
@@ -135,7 +135,9 @@ body.cms-admin-page {
 body.cms-page-add .admin-bar .admin-bar-button-page-add,
 body.cms-pages .admin-bar .admin-bar-button-pages,
 body.cms-settings .admin-bar .admin-bar-button-settings,
-body.cms-page-edit .admin-bar .admin-bar-button-page-edit {
+body.cms-page-edit .admin-bar .admin-bar-button-page-edit,
+body.editing .admin-bar .admin-bar-button-page-edit,
+body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 	background-color: $adminBarActiveButtonBackground;
 	color: $adminBarActiveButtonColor;
 	&:hover,

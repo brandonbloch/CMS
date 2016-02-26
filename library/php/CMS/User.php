@@ -43,7 +43,7 @@ class User {
 	 * @return User                         the User, as requested by username
 	 */
 	public static function withUsername($username) {
-		if (!Validate::username($username)) {
+		if (!Library\Validate::username($username)) {
 			throw new \InvalidArgumentException("Invalid username supplied to constructor.");
 		}
 		try {
@@ -111,7 +111,7 @@ class User {
 	 * @return User                         the User, as requested by email address
 	 */
 	public static function withEmail($email) {
-		if (!Validate::email($email)) {
+		if (!Library\Validate::email($email)) {
 			throw new \InvalidArgumentException("Invalid email address supplied to constructor.");
 		}
 		try {
@@ -180,13 +180,13 @@ class User {
 	 */
 	public static function create($username, $email, $password, $admin = 0) {
 		$reset_key = Auth::getNewResetKey();
-		if (!Validate::username($username)) {
+		if (!Library\Validate::username($username)) {
 			throw new \InvalidArgumentException("Invalid username supplied as argument.");
 		}
-		if (!Validate::email($email)) {
+		if (!Library\Validate::email($email)) {
 			throw new \InvalidArgumentException("Invalid email address supplied as argument.");
 		}
-		if (!Validate::password($password)) {
+		if (!Library\Validate::password($password)) {
 			throw new \InvalidArgumentException("Invalid password supplied as argument.");
 		}
 		if (!is_int($admin)) {
@@ -303,7 +303,7 @@ class User {
 	}
 
 	private function setUsernamePrivate($username) {
-		if (Validate::username($username)) {
+		if (Library\Validate::username($username)) {
 			$this->username = $username;
 		} else {
 			throw new \InvalidArgumentException("Please supply a valid username.");
@@ -318,7 +318,7 @@ class User {
 	 * @throws \InvalidArgumentException     if the username chosen is already taken
 	 */
 	public function setUsername($username) {
-		if (Validate::username($username)) {
+		if (Library\Validate::username($username)) {
 			if ($this->username == $username) {
 				throw new \InvalidArgumentException("Please choose a new username.");
 			}
@@ -341,7 +341,7 @@ class User {
 	 * @return bool                         true if available, or false if taken
 	 */
 	public static function usernameAvailable($username) {
-		if (!Validate::username($username)) {
+		if (!Library\Validate::username($username)) {
 			throw new \InvalidArgumentException("Invalid username supplied as argument.");
 		}
 
@@ -387,7 +387,7 @@ class User {
 	 * @throws \Exception                    If a connection error occurred
 	 */
 	public function setPassword($pass) {
-		if (Validate::password($pass)) {
+		if (Library\Validate::password($pass)) {
 			$reset_key = Auth::getNewResetKey();
 			$pass = Auth::hash($pass);
 			try {
@@ -422,7 +422,7 @@ class User {
 	 * @throws InvalidArgumentException     if the email address provided is invalid
 	 */
 	public function setEmail($email) {
-		if (Validate::email($email)) {
+		if (Library\Validate::email($email)) {
 			$this->email = $email;
 		} else {
 			throw new \InvalidArgumentException("Invalid email address supplied as argument.");
@@ -448,7 +448,7 @@ class User {
 				$this->last_login = false;
 				return false;
 			} else {
-				$this->last_login = \DateTime::createFromFormat(Format::MYSQL_TIMESTAMP_FORMAT, $lastLogin);
+				$this->last_login = \DateTime::createFromFormat(Library\Format::MYSQL_TIMESTAMP_FORMAT, $lastLogin);
 			}
 		}
 		return ($this->last_login) ? clone $this->last_login : false;
@@ -456,7 +456,7 @@ class User {
 
 	public function updateLoginTimestamp() {
 		$this->last_login = new \DateTime();
-		$now = $this->last_login->format(Format::MYSQL_TIMESTAMP_FORMAT);
+		$now = $this->last_login->format(Library\Format::MYSQL_TIMESTAMP_FORMAT);
 		try {
 			$pdo = DB::getHandle();
 			$stmt = $pdo->prepare("UPDATE users SET last_login = :lastlogin WHERE pid = :pid");

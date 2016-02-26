@@ -43,7 +43,7 @@ class Pages {
 
 		$type = array();
 		$type["name"] = $name;
-		if (!Validate::int($options["zones"])) {
+		if (!Library\Validate::int($options["zones"])) {
 			throw new \InvalidArgumentException("Invalid number of editable zones supplied to Pages::registerPageType.");
 		}
 		if (!file_exists(Theme::getThemeDirectory() . "/" . $options["template"])) {
@@ -138,7 +138,8 @@ class Pages {
 			$string .= '<td>' . $page->getShortname() . '</td>' . PHP_EOL;
 
 			$string .= '<td class="actions-list">';
-			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&redirect=pages" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE) . '"></i></a>';
+			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&settings" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_PAGE_SETTINGS) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_PAGE_SETTINGS) . '"></i></a>';
+			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE) . '"></i></a>';
 			if ($page->isHomepage()) {
 				$string .= '<a disabled title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOMEPAGE_NO_DELETE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			} else {

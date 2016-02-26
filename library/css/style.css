@@ -35,7 +35,7 @@ body.logged-in {
   margin: 0 5px;
   width: 32px;
   height: 36px;
-  padding-top: 8px;
+  padding-top: 6px;
   text-align: center;
   cursor: pointer;
   position: relative;
@@ -91,7 +91,9 @@ body.cms-admin-page {
 body.cms-page-add .admin-bar .admin-bar-button-page-add,
 body.cms-pages .admin-bar .admin-bar-button-pages,
 body.cms-settings .admin-bar .admin-bar-button-settings,
-body.cms-page-edit .admin-bar .admin-bar-button-page-edit {
+body.cms-page-edit .admin-bar .admin-bar-button-page-edit,
+body.editing .admin-bar .admin-bar-button-page-edit,
+body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   background-color: #444;
   color: #ccc; }
   body.cms-page-add .admin-bar .admin-bar-button-page-add:hover, body.cms-page-add .admin-bar .admin-bar-button-page-add:focus,
@@ -100,7 +102,11 @@ body.cms-page-edit .admin-bar .admin-bar-button-page-edit {
   body.cms-settings .admin-bar .admin-bar-button-settings:hover,
   body.cms-settings .admin-bar .admin-bar-button-settings:focus,
   body.cms-page-edit .admin-bar .admin-bar-button-page-edit:hover,
-  body.cms-page-edit .admin-bar .admin-bar-button-page-edit:focus {
+  body.cms-page-edit .admin-bar .admin-bar-button-page-edit:focus,
+  body.editing .admin-bar .admin-bar-button-page-edit:hover,
+  body.editing .admin-bar .admin-bar-button-page-edit:focus,
+  body.cms-page-settings .admin-bar .admin-bar-button-page-settings:hover,
+  body.cms-page-settings .admin-bar .admin-bar-button-page-settings:focus {
     color: #ccc; }
 
 .cms-admin-page-interior {

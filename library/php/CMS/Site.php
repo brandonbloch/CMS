@@ -51,7 +51,7 @@ class Site extends SettingAbstract {
 		if (!is_string($title)) {
 			throw new \InvalidArgumentException("Site::setTitle expected string, got " . gettype($title) . " instead.");
 		}
-		if (!Validate::plainText($title)) {
+		if (!Library\Validate::plainText($title)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to Site::setTitle.");
 		}
 		self::$title = $title;
@@ -75,7 +75,7 @@ class Site extends SettingAbstract {
 		if (!is_string($description)) {
 			throw new \InvalidArgumentException("Site::setDescription expected string, got " . gettype($description) . " instead.");
 		}
-		if (!Validate::plainText($description)) {
+		if (!Library\Validate::plainText($description)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to Site::setDescription.");
 		}
 		self::$description = $description;
@@ -93,7 +93,7 @@ class Site extends SettingAbstract {
 		if (!is_string($name)) {
 			throw new \InvalidArgumentException("Site::setAdminName expected string, got " . gettype($name) . " instead.");
 		}
-		if (!Validate::name($name)) {
+		if (!Library\Validate::name($name)) {
 			throw new \InvalidArgumentException("Invalid name supplied to Site::setAdminName.");
 		}
 		self::$adminName = $name;
@@ -111,7 +111,7 @@ class Site extends SettingAbstract {
 		if (!is_string($email)) {
 			throw new \InvalidArgumentException("Site::setAdminEmail expected string, got " . gettype($email) . " instead.");
 		}
-		if (!Validate::email($email)) {
+		if (!Library\Validate::email($email)) {
 			throw new \InvalidArgumentException("Invalid email address supplied to Site::setAdminEmail.");
 		}
 		self::$adminEmail = $email;
@@ -125,6 +125,16 @@ class Site extends SettingAbstract {
 			die();
 		}
 		include "404.php";
+		die();
+	}
+
+	public static function set403Response() {
+		http_response_code(403);
+		if (file_exists(Theme::getThemeDirectory() . "/403.php")) {
+			include Theme::getThemeDirectory() . "/403.php";
+			die();
+		}
+		include "403.php";
 		die();
 	}
 

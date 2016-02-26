@@ -8,7 +8,7 @@ $data = array(
 
 $pageType = 0;      // TODO do something with this
 
-$errors = new CMS\MessageCollector();
+$errors = new CMS\Library\MessageCollector();
 
 if (isset($_POST["page_add_submit"])) {
 
@@ -19,24 +19,24 @@ if (isset($_POST["page_add_submit"])) {
 	$data["page_title"] = trim($_POST["page_title"]);
 	if ( ! $data["page_title"] ) {
 		$continue = false;
-		$errors->addMessage("Give the page a title.", CMS\MessageCollector::WARNING);
-	} else if (!CMS\Validate::plainText($data["page_title"])) {
+		$errors->addMessage("Give the page a title.", CMS\Library\MessageCollector::WARNING);
+	} else if (!CMS\Library\Validate::plainText($data["page_title"])) {
 		$continue = false;
-		$errors->addMessage("Enter a valid page title.", CMS\MessageCollector::WARNING);
+		$errors->addMessage("Enter a valid page title.", CMS\Library\MessageCollector::WARNING);
 	}
 
 	$data["page_shortname"] = trim($_POST["page_shortname"]);
 	if (!$data["page_shortname"]) {
 		$continue = false;
-		$errors->addMessage("Give the page a shortname.", CMS\MessageCollector::WARNING);
-	} else if (!CMS\Validate::plainText($data["page_shortname"])) {
+		$errors->addMessage("Give the page a shortname.", CMS\Library\MessageCollector::WARNING);
+	} else if (!CMS\Library\Validate::plainText($data["page_shortname"])) {
 		$continue = false;
-		$errors->addMessage("Enter a valid shortname.", CMS\MessageCollector::WARNING);
+		$errors->addMessage("Enter a valid shortname.", CMS\Library\MessageCollector::WARNING);
 	} else {
-		$slug = CMS\Format::slug($data["page_shortname"]);
+		$slug = CMS\Library\Format::slug($data["page_shortname"]);
 		if (CMS\Pages::slugExists($slug)) {
 			$continue = false;
-			$errors->addMessage("A page with that shortname already exists.", CMS\MessageCollector::WARNING);
+			$errors->addMessage("A page with that shortname already exists.", CMS\Library\MessageCollector::WARNING);
 		}
 	}
 
@@ -80,7 +80,7 @@ if (isset($_POST["page_add_submit"])) {
 			<label for="page_shortname">Page Shortname</label>
 			<input type="text" name="page_shortname" id="page_shortname" value="<?php echo $data["page_shortname"]; ?>">
 
-			<p id="shortname_explanation" style="display: <?php echo ($data["page_shortname"] == "") ? "none" : "block"; ?>;">The page will be displayed as <span id="page_nav_display"><?php echo $data["page_shortname"]; ?></span> in navigation menus and located at <span id="page_url_display"><?php echo CMS\Site::getBaseURL() . "/" . CMS\Format::slug($data["page_shortname"]); ?></span></p>
+			<p id="shortname_explanation" style="display: <?php echo ($data["page_shortname"] == "") ? "none" : "block"; ?>;">The page will be displayed as <span id="page_nav_display"><?php echo $data["page_shortname"]; ?></span> in navigation menus and located at <span id="page_url_display"><?php echo CMS\Site::getBaseURL() . "/" . CMS\Library\Format::slug($data["page_shortname"]); ?></span></p>
 
 		</section>
 
