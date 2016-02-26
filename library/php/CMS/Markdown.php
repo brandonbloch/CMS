@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 class Markdown {
 
 	private static $parsedownInstance;

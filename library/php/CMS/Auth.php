@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 /**
  * Class Auth
  *
@@ -92,7 +94,7 @@ class Auth {
 		if ($_SESSION['logged_in'] == 1) { // if logged in, ensure session validity
 			
 			// if the maximum idle time is exceeded, halt the session
-			if (MAX_IDLE_TIME >= 0 && time() > $_SESSION['last_activity'] + MAX_IDLE_TIME) {
+			if (\SESSION_IDLE_TIME >= 0 && time() > $_SESSION['last_activity'] + \SESSION_IDLE_TIME) {
 				self::sessionHalt();
 				return false;
 			} else {
@@ -139,10 +141,10 @@ class Auth {
 	public static function login($username, $password) {
 		self::initialize();
 		if (!Validate::username($username)) {
-			throw new InvalidArgumentException("Invalid username supplied as argument.");
+			throw new \InvalidArgumentException("Invalid username supplied as argument.");
 		}
 		if (!Validate::password($password)) {
-			throw new InvalidArgumentException("Invalid password supplied as argument.");
+			throw new \InvalidArgumentException("Invalid password supplied as argument.");
 		}
 
 		try {
@@ -152,9 +154,9 @@ class Auth {
 			$stmt->execute();
 			$user = $stmt->fetch();
 			if ($user === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return false;
 		}
 
@@ -178,7 +180,7 @@ class Auth {
 	 */
 	public static function isIdle() {
 		self::initialize();
-		if (MAX_IDLE_TIME <= 0) {
+		if (\SESSION_IDLE_TIME <= 0) {
 			return false;
 		}
 		if (isset($_SESSION['idle']) && $_SESSION['idle'] == 1) {
@@ -194,22 +196,22 @@ class Auth {
 	 */
 	public static function idleMessage() {
 		if (Auth::isIdle()) {
-			if (MAX_IDLE_TIME == 1) {
+			if (\SESSION_IDLE_TIME == 1) {
 				return "You have been logged out due to 1 second of inactivity.";
 			}
-			if (MAX_IDLE_TIME < 60) {
-				return "You have been logged out due to " . MAX_IDLE_TIME . " seconds of inactivity.";
+			if (\SESSION_IDLE_TIME < 60) {
+				return "You have been logged out due to " . \SESSION_IDLE_TIME . " seconds of inactivity.";
 			}
-			if (MAX_IDLE_TIME < 120) {
+			if (\SESSION_IDLE_TIME < 120) {
 				return "You have been logged out due to 1 minute of inactivity.";
 			}
-			if (MAX_IDLE_TIME < 3600) {
-				return "You have been logged out due to " . floor(MAX_IDLE_TIME / 60) . " minutes of inactivity.";
+			if (\SESSION_IDLE_TIME < 3600) {
+				return "You have been logged out due to " . floor(\SESSION_IDLE_TIME / 60) . " minutes of inactivity.";
 			}
-			if (MAX_IDLE_TIME < 7200) {
+			if (\SESSION_IDLE_TIME < 7200) {
 				return "You have been logged out due to 1 hour of inactivity.";
 			}
-			return "You have been logged out due to " . floor(MAX_IDLE_TIME / 3600) . " hours of inactivity.";
+			return "You have been logged out due to " . floor(\SESSION_IDLE_TIME / 3600) . " hours of inactivity.";
 		} else {
 			return "";
 		}
@@ -221,7 +223,7 @@ class Auth {
 	 * @return bool         True if the session exists and the user is logged in, and false if not
 	 */
 	public static function isLoggedIn() {
-		if (session_status() == PHP_SESSION_NONE) {
+		if (session_status() == \PHP_SESSION_NONE) {
 			return false;
 		}
 		self::initialize();
@@ -267,7 +269,7 @@ class Auth {
 	public static function hash($password) {
 		self::initialize();
 		$options = array("cost" => self::COST_VALUE);
-		return password_hash($password, PASSWORD_DEFAULT, $options);
+		return password_hash($password, \PASSWORD_DEFAULT, $options);
 	}
 
 	/**
@@ -323,7 +325,7 @@ class Auth {
 
 	// Ensures an IP address is both a valid IP and does not fall within a private network range.
 	private static function validate_ip($ip) {
-		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+		if (filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4 | \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE) === false) {
 			return false;
 		}
 		return true;

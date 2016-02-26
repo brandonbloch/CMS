@@ -25,6 +25,10 @@ header {
 
 	h1 {
 		margin: 0 0 0 18px;
+		a {
+			color: inherit;
+			text-decoration: inherit;
+		}
 	}
 	ul {
 		float: right;

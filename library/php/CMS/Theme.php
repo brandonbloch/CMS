@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 class Theme extends SettingAbstract {
 
 	// Make these private to prevent instantiation
@@ -32,10 +34,10 @@ class Theme extends SettingAbstract {
 
 	public static function setColorScheme($code) {
 		if (!Validate::int($code)) {
-			throw new InvalidArgumentException("Theme::setColorScheme expected int, got " . gettype($code) . " instead.");
+			throw new \InvalidArgumentException("Theme::setColorScheme expected int, got " . gettype($code) . " instead.");
 		}
 		if (!array_key_exists($code, self::$colorSchemes)) {
-			throw new InvalidArgumentException("Nonexistent code supplied to Theme::setColorScheme.");
+			throw new \InvalidArgumentException("Nonexistent code supplied to Theme::setColorScheme.");
 		}
 		self::$colorScheme = (int) $code;
 		self::saveValueToDatabase($code, "color_scheme");
@@ -70,10 +72,10 @@ class Theme extends SettingAbstract {
 	 */
 	public static function setActiveTheme($theme) {
 		if (!is_string($theme)) {
-			throw new InvalidArgumentException("Theme::setActiveTheme expected string, got " . gettype($theme) . " instead.");
+			throw new \InvalidArgumentException("Theme::setActiveTheme expected string, got " . gettype($theme) . " instead.");
 		}
 		if (!Validate::plainText($theme)) {
-			throw new InvalidArgumentException("Invalid string content supplied to Theme::setActiveTheme.");
+			throw new \InvalidArgumentException("Invalid string content supplied to Theme::setActiveTheme.");
 		}
 		self::$activeTheme = $theme;
 		self::saveValueToDatabase($theme, "active_theme");
@@ -91,7 +93,7 @@ class Theme extends SettingAbstract {
 	 */
 	public static function includeHeader() {
 		if (!file_exists(self::getThemeDirectory() . "/header.php")) {
-			throw new RuntimeException("Theme '" . self::getActiveTheme() . "' does not have a header.php file.");
+			throw new \RuntimeException("Theme '" . self::getActiveTheme() . "' does not have a header.php file.");
 		}
 		include self::getThemeDirectory() . "/header.php";
 	}
@@ -101,7 +103,7 @@ class Theme extends SettingAbstract {
 	 */
 	public static function includeFooter() {
 		if (!file_exists(self::getThemeDirectory() . "/footer.php")) {
-			throw new RuntimeException("Theme '" . self::getActiveTheme() . "' does not have a footer.php file.");
+			throw new \RuntimeException("Theme '" . self::getActiveTheme() . "' does not have a footer.php file.");
 		}
 		include self::getThemeDirectory() . "/footer.php";
 	}
@@ -131,7 +133,7 @@ class Theme extends SettingAbstract {
 	public static function readThemeFile($themeName) {
 		$file = "themes/" . $themeName . "/theme.txt";
 		if (!file_exists($file)) {
-			throw new RuntimeException("Theme file missing from theme '" . $themeName . "' folder.");
+			throw new \RuntimeException("Theme file missing from theme '" . $themeName . "' folder.");
 		}
 		return json_decode(Format::convertSmartQuotes(file_get_contents($file)), true);
 	}

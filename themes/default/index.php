@@ -1,9 +1,9 @@
 <?php
 
-$page = Pages::getCurrentPage();
+$page = CMS\Pages::getCurrentPage();
 
-Theme::includeHeader();
+CMS\Theme::includeHeader();
 
-echo Markdown::parse($page->getContent());
+echo CMS\Markdown::parse($page->getContent());
 
-Theme::includeFooter();
+CMS\Theme::includeFooter();

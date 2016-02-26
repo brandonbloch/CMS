@@ -1,5 +1,5 @@
 <script>
-	_baseURL = "<?php echo Site::getBaseURL(); ?>";
+	_baseURL = "<?php echo CMS\Site::getBaseURL(); ?>";
 	onload = function () {
 		var input = document.getElementById("page_shortname");
 		input.oninput = shortname_preview_update;

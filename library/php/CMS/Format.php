@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 /**
  * Format class
  *
@@ -46,7 +48,7 @@ class Format {
 			}
 			return $int . $ends[abs($int) % 10];
 		}
-		throw new InvalidArgumentException("Expected integer input to format, got " . gettype($int) . " instead.");
+		throw new \InvalidArgumentException("Expected integer input to format, got " . gettype($int) . " instead.");
 	}
 
 	/**
@@ -72,8 +74,8 @@ class Format {
 	public static function date($ts, $format = Format::DATE_FORMAT) {
 		self::initialize();
 
-		if ($ts instanceof DateTime) {
-			$blank = new DateTime(date("Y-m-d", 0));
+		if ($ts instanceof \DateTime) {
+			$blank = new \DateTime(date("Y-m-d", 0));
 			if ($ts == $blank) {
 				return "";
 			}
@@ -109,7 +111,7 @@ class Format {
 		self::initialize();
 
 		// convert the input to a UNIX timestamp
-		if ($ts instanceof DateTime) {
+		if ($ts instanceof \DateTime) {
 			$ts = $ts->getTimestamp();
 		} else if(!ctype_digit($ts)) {
         	$ts = strtotime($ts);
@@ -219,8 +221,8 @@ class Format {
 	public static function bytes($size, $precision = 2) {
 		try {
 			$size = (int) $size;
-		} catch (Exception $e) {
-			throw new InvalidArgumentException("Expected integer filesize, got " . gettype($size) . " instead.");
+		} catch (\Exception $e) {
+			throw new \InvalidArgumentException("Expected integer filesize, got " . gettype($size) . " instead.");
 		}
 		$prefixes = array("bytes", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB");
 		$magnitude = 0;
@@ -229,7 +231,7 @@ class Format {
 			$magnitude ++;
 		}
 		if (!array_key_exists($magnitude, $prefixes)) {
-			throw new OutOfRangeException("The filesize is too large to format.");
+			throw new \OutOfRangeException("The filesize is too large to format.");
 		}
 		return round($size, $precision) . " " . $prefixes[$magnitude];
 	}

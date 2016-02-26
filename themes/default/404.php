@@ -1,6 +1,6 @@
 <?php
 
-Theme::includeHeader();
+CMS\Theme::includeHeader();
 
 ?>
 
@@ -12,4 +12,4 @@ Theme::includeHeader();
 
 <?php
 
-Theme::includeFooter();
+CMS\Theme::includeFooter();

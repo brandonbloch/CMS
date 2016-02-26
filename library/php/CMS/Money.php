@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 /**
  * Class Money
  */
@@ -12,7 +14,7 @@ class Money {
 	public function __construct($string) {
 
 		if (!isset($string) || $string == "") {
-			throw new InvalidArgumentException("Invalid amount supplied as argument.");
+			throw new \InvalidArgumentException("Invalid amount supplied as argument.");
 		}
 
 		if (is_int($string)) {
@@ -24,13 +26,13 @@ class Money {
 		}
 
 		if (!is_numeric($string)) {
-			throw new InvalidArgumentException("Invalid amount supplied as argument.");
+			throw new \InvalidArgumentException("Invalid amount supplied as argument.");
 		}
 
 		try {
 			$this->value = bcadd($string, "0", self::DECIMAL_PLACES);
-		} catch (Exception $e) {
-			throw new InvalidArgumentException("Invalid amount supplied as argument.");
+		} catch (\Exception $e) {
+			throw new \InvalidArgumentException("Invalid amount supplied as argument.");
 		}
 
 	}
@@ -41,7 +43,7 @@ class Money {
 	 */
 	public function add(Money $other) {
 		if (is_null($other)) {
-			throw new InvalidArgumentException("Null reference supplied to method.");
+			throw new \InvalidArgumentException("Null reference supplied to method.");
 		}
 		$this->value = bcadd($this->value, $other->value, self::DECIMAL_PLACES);
 	}
@@ -52,7 +54,7 @@ class Money {
 	 */
 	public function subtract(Money $other) {
 		if (is_null($other)) {
-			throw new InvalidArgumentException("Null reference supplied to method.");
+			throw new \InvalidArgumentException("Null reference supplied to method.");
 		}
 		$this->value = bcsub($this->value, $other->value, self::DECIMAL_PLACES);
 	}
@@ -63,7 +65,7 @@ class Money {
 	 */
 	public function multiply(Money $other) {
 		if (is_null($other)) {
-			throw new InvalidArgumentException("Null reference supplied to method.");
+			throw new \InvalidArgumentException("Null reference supplied to method.");
 		}
 		$this->value = bcmul($this->value, $other->value, self::DECIMAL_PLACES);
 	}
@@ -74,7 +76,7 @@ class Money {
 	 */
 	public function scale($scale) {
 		if (is_null($scale)) {
-			throw new InvalidArgumentException("Null reference supplied to method.");
+			throw new \InvalidArgumentException("Null reference supplied to method.");
 		}
 		if (is_numeric($scale)) {
 			$this->multiply(new Money($scale));
@@ -95,7 +97,7 @@ class Money {
 			$this->value = bcdiv($this->value, $divisor, self::DECIMAL_PLACES);
 			return $remainder;
 		} else {
-			throw new InvalidArgumentException("Invalid divisor supplied as argument.");
+			throw new \InvalidArgumentException("Invalid divisor supplied as argument.");
 		}
 	}
 
@@ -106,7 +108,7 @@ class Money {
 	 */
 	public function compare(Money $other) {
 		if (is_null($other)) {
-			throw new InvalidArgumentException("Null reference supplied to method.");
+			throw new \InvalidArgumentException("Null reference supplied to method.");
 		}
 		return bccomp($this->value, $other->value, self::DECIMAL_PLACES);
 	}

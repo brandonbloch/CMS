@@ -1,14 +1,14 @@
-<?php $page = Pages::getCurrentPage(); ?>
+<?php $page = CMS\Pages::getCurrentPage(); ?>
 
 <html>
 <head>
-	<title><?php echo Site::getTitle(); ?></title>
+	<title><?php echo CMS\Site::getTitle(); ?></title>
 </head>
 <body>
 
-<?php echo Markdown::parse($page->getContent());
+<?php echo CMS\Markdown::parse($page->getContent());
 
-Core::includeCore(); ?>
+CMS\Core::includeCore(); ?>
 
 </body>
 </html>

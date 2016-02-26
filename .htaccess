@@ -1,0 +1,7 @@
+RewriteEngine on
+
+RewriteRule ^([\w-]+)/?$ index.php?slug=$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.*) index.php?notfound [L]

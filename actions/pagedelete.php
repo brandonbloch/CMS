@@ -1,14 +1,14 @@
 <?php
 
 try {
-	$page = Page::withID( $_GET["delete"] );
-	Pages::setCurrentPage($page);
+	$page = CMS\Page::withID( $_GET["delete"] );
+	CMS\Pages::setCurrentPage($page);
 } catch (Exception $e) {
-	Auth::redirect(Site::getBaseURL() . "?pages");
+	CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
 if ($page->isHomepage()) {
-	Auth::redirect(Site::getBaseURL() . "?pages");
+	CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
 $data = array(
@@ -18,7 +18,7 @@ $data = array(
 	"page_slug" => "",
 );
 
-$errors = new MessageCollector();
+$errors = new CMS\MessageCollector();
 
 if (isset($_POST["page_delete_submit"])) {
 
@@ -35,9 +35,9 @@ if (isset($_POST["page_delete_submit"])) {
 
 				$success = $page->delete();
 				if ($success) {
-					Auth::redirect(Site::getBaseURL() . "?pages");
+					CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
 				} else {
-					$errors->addMessage("An error occurred trying to delete the page.", MessageCollector::DANGER);
+					$errors->addMessage("An error occurred trying to delete the page.", CMS\MessageCollector::DANGER);
 				}
 
 			} else if ($_POST["sub_page_decision"] == 2) {      // promote all sub-pages, by moving children to the level of this page
@@ -48,14 +48,14 @@ if (isset($_POST["page_delete_submit"])) {
 				}
 				$success = $page->delete();
 				if ($success) {
-					Auth::redirect(Site::getBaseURL() . "?pages");
+					CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
 				} else {
-					$errors->addMessage("An error occurred trying to delete the page.", MessageCollector::DANGER);
+					$errors->addMessage("An error occurred trying to delete the page.", CMS\MessageCollector::DANGER);
 				}
 
 			}
 		} else {
-			$errors->addMessage("You must decide what to do with the sub-pages.", MessageCollector::WARNING);
+			$errors->addMessage("You must decide what to do with the sub-pages.", CMS\MessageCollector::WARNING);
 		}
 
 	} else {
@@ -63,13 +63,13 @@ if (isset($_POST["page_delete_submit"])) {
 		if ($success) {
 
 			if (isset($_GET["redirect"]) && $_GET["redirect"] == "home") {
-				Auth::redirect(Site::getBaseURL());
+				CMS\Auth::redirect(CMS\Site::getBaseURL());
 			} else {
-				Auth::redirect(Site::getBaseURL() . "?pages");
+				CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
 			}
 
 		} else {
-			$errors->addMessage("An error occurred trying to delete the page.", MessageCollector::DANGER);
+			$errors->addMessage("An error occurred trying to delete the page.", CMS\MessageCollector::DANGER);
 		}
 
 	}
@@ -81,10 +81,10 @@ if (isset($_POST["page_delete_submit"])) {
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo LABEL_DELETE_PAGE; ?> - <?php echo Site::getTitle() ?></title>
-	<link rel="stylesheet" href="<?php echo Theme::getStylesheetLink() ?>">
+	<title><?php echo LABEL_DELETE_PAGE; ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
-<body class="<?php echo Theme::getBodyClasses(); ?> cms-admin-page cms-page-delete">
+<body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page cms-page-delete">
 
 <div class="cms-admin-page-interior">
 
@@ -134,12 +134,12 @@ if (isset($_POST["page_delete_submit"])) {
 		<input type="hidden" name="page_delete_submit">
 		<button type="submit" class="delete-button"><i class="fa fa-<?php echo ICON_DELETE_PAGE; ?>"></i> Delete</button>
 
-		<a href="<?php echo Site::getBaseURL(); ?>?pages" class="cancel-button">cancel</a>
+		<a href="<?php echo CMS\Site::getBaseURL(); ?>?pages" class="cancel-button">cancel</a>
 
 	</form>
 
 </div>
 
-<?php Core::includeCore(); ?>
+<?php CMS\Core::includeCore(); ?>
 </body>
 </html>

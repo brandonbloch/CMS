@@ -1,8 +1,8 @@
-<?php Core::includeCore() ?>
-
 <footer>
-	<p>&copy; <a href="mailto:<?php echo Site::getAdminEmail() ?>"><?php echo Site::getAdminName() ?></a></p>
+	<p>&copy; <a href="mailto:<?php echo CMS\Site::getAdminEmail() ?>"><?php echo CMS\Site::getAdminName() ?></a></p>
 </footer>
+
+<?php CMS\Core::includeCore() ?>
 
 </body>
 </html>

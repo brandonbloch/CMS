@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 /**
  * DB class
  *
@@ -24,9 +26,9 @@ class DB {
 	 *
 	 * @param string $database
 	 *
-	 * @return PDO
+	 * @return \PDO
 	 */
-	public static function getHandle($database = DATABASE_NAME) {
+	public static function getHandle($database = \DB_NAME) {
 		if ($database !== self::$database) {
 			self::close();
 			self::$database = $database;
@@ -37,10 +39,10 @@ class DB {
 
 	private static function open($database) {
 		try {
-			self::$connection = new PDO("mysql:host=" . DATABASE_SERVER . ";dbname=" . $database . ";charset=utf8", DATABASE_USERNAME, DATABASE_PASSWORD);
-			self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to initiate database connection.");
+			self::$connection = new \PDO("mysql:host=" . \DB_HOST . ";dbname=" . $database . ";charset=utf8", \DB_USER, \DB_PASS);
+			self::$connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to initiate database connection.");
 		}
 	}
 

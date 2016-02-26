@@ -8,7 +8,7 @@ $data = array(
 
 $pageType = 0;      // TODO do something with this
 
-$errors = new MessageCollector();
+$errors = new CMS\MessageCollector();
 
 if (isset($_POST["page_add_submit"])) {
 
@@ -19,30 +19,30 @@ if (isset($_POST["page_add_submit"])) {
 	$data["page_title"] = trim($_POST["page_title"]);
 	if ( ! $data["page_title"] ) {
 		$continue = false;
-		$errors->addMessage( "Give the page a title.", MessageCollector::WARNING );
-	} else if ( ! Validate::plainText( $data["page_title"] ) ) {
+		$errors->addMessage("Give the page a title.", CMS\MessageCollector::WARNING);
+	} else if (!CMS\Validate::plainText($data["page_title"])) {
 		$continue = false;
-		$errors->addMessage( "Enter a valid page title.", MessageCollector::WARNING );
+		$errors->addMessage("Enter a valid page title.", CMS\MessageCollector::WARNING);
 	}
 
 	$data["page_shortname"] = trim($_POST["page_shortname"]);
-	if ( ! $data["page_shortname"] ) {
+	if (!$data["page_shortname"]) {
 		$continue = false;
-		$errors->addMessage( "Give the page a shortname.", MessageCollector::WARNING );
-	} else if ( ! Validate::plainText( $data["page_shortname"] ) ) {
+		$errors->addMessage("Give the page a shortname.", CMS\MessageCollector::WARNING);
+	} else if (!CMS\Validate::plainText($data["page_shortname"])) {
 		$continue = false;
-		$errors->addMessage( "Enter a valid shortname.", MessageCollector::WARNING );
+		$errors->addMessage("Enter a valid shortname.", CMS\MessageCollector::WARNING);
 	} else {
-		$slug = Format::slug($data["page_shortname"]);
-		if (Pages::slugExists($slug)) {
+		$slug = CMS\Format::slug($data["page_shortname"]);
+		if (CMS\Pages::slugExists($slug)) {
 			$continue = false;
-			$errors->addMessage("A page with that shortname already exists.", MessageCollector::WARNING);
+			$errors->addMessage("A page with that shortname already exists.", CMS\MessageCollector::WARNING);
 		}
 	}
 
 	if ($continue) {
-		$page = Page::create($data["parent_page"], $data["page_title"], $data["page_shortname"], $slug);
-		Auth::redirect($page->getURL());
+		$page = CMS\Page::create($data["parent_page"], $data["page_title"], $data["page_shortname"], $slug);
+		CMS\Auth::redirect($page->getURL());
 	}
 
 }
@@ -52,10 +52,10 @@ if (isset($_POST["page_add_submit"])) {
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo LABEL_ADD_PAGE; ?> - <?php echo Site::getTitle() ?></title>
-	<link rel="stylesheet" href="<?php echo Theme::getStylesheetLink() ?>">
+	<title><?php echo LABEL_ADD_PAGE; ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
-<body class="<?php echo Theme::getBodyClasses(); ?> cms-admin-page cms-page-add">
+<body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page cms-page-add">
 
 <div class="cms-admin-page-interior">
 
@@ -72,7 +72,7 @@ if (isset($_POST["page_add_submit"])) {
 			<label for="parent_page">Parent Page</label>
 			<select name="parent_page" id="parent_page">
 				<option value="0" <?php if ($data["parent_page"] == 0) echo "selected"; ?>>(none)</option>
-				<?php echo Pages::getPageHierarchySelectList($data["parent_page"]); ?>
+				<?php echo CMS\Pages::getPageHierarchySelectList($data["parent_page"]); ?>
 			</select>
 
 			<label for="page_title">Page Title</label>
@@ -81,11 +81,11 @@ if (isset($_POST["page_add_submit"])) {
 			<label for="page_shortname">Page Shortname</label>
 			<input type="text" name="page_shortname" id="page_shortname" value="<?php echo $data["page_shortname"]; ?>">
 
-			<p id="shortname_explanation" style="display: <?php echo ($data["page_shortname"] == "") ? "none" : "block"; ?>;">The page will be displayed as <span id="page_nav_display"><?php echo $data["page_shortname"]; ?></span> in navigation menus and located at <span id="page_url_display"><?php echo Site::getBaseURL() . "/" . Format::slug($data["page_shortname"]); ?></span></p>
+			<p id="shortname_explanation" style="display: <?php echo ($data["page_shortname"] == "") ? "none" : "block"; ?>;">The page will be displayed as <span id="page_nav_display"><?php echo $data["page_shortname"]; ?></span> in navigation menus and located at <span id="page_url_display"><?php echo CMS\Site::getBaseURL() . "/" . CMS\Format::slug($data["page_shortname"]); ?></span></p>
 
 		</section>
 
-		<?php if (count(Pages::getPageTypes()) > 1) { ?>
+		<?php if (count(CMS\Pages::getPageTypes()) > 1) { ?>
 
 		<section>
 
@@ -93,7 +93,7 @@ if (isset($_POST["page_add_submit"])) {
 
 			<div class="radio-group cms-page-type-list">
 
-				<?php foreach (Pages::getPageTypes() as $id => $type) { ?>
+				<?php foreach (CMS\Pages::getPageTypes() as $id => $type) { ?>
 					<div class="page-type">
 						<label>
 							<input type="radio" name="page_type" id="page_type_<?php echo $id; ?>" value="<?php echo $id; ?>" <?php if ($pageType === $id) echo "checked"; ?>>
@@ -120,6 +120,6 @@ if (isset($_POST["page_add_submit"])) {
 </div>
 
 <?php include "library/js/slugpreview-js.php"; ?>
-<?php Core::includeCore(); ?>
+<?php CMS\Core::includeCore(); ?>
 </body>
 </html>

@@ -6,6 +6,7 @@ require_once "localization.php";
 
 // include the library/php directory for class auto-loading
 spl_autoload_register(function($class) {
+	$class = str_replace("\\", "/", $class);
 	include_once "library/php/$class.php";
 });
 
@@ -16,8 +17,13 @@ spl_autoload_register(function($class) {
 
 // begin main pageloader action
 
-if (file_exists(Theme::getThemeDirectory() . "/theme.php")) {
-	include_once Theme::getThemeDirectory() . "/theme.php";
+if (file_exists(CMS\Theme::getThemeDirectory() . "/theme.php")) {
+	include_once CMS\Theme::getThemeDirectory() . "/theme.php";
+}
+
+// 404 page was redirected to this page by .htaccess
+if (isset($_GET["notfound"])) {
+	CMS\Site::set404Response();
 }
 
 // logout process requested
@@ -32,18 +38,18 @@ if (isset($_GET["slug"])) {
 
 	// if the page slug is nonexistent, return a 404 response
 	try {
-		$currentPage = Page::withSlug($_GET["slug"]);
+		$currentPage = CMS\Page::withSlug($_GET["slug"]);
 	} catch (Exception $e) {
-		Site::set404Response();
+		CMS\Site::set404Response();
 	}
 
 	// if on the homepage, redirect Site::getBaseURL (this will run again and reach the bottom)
 	if ($currentPage->isHomepage()) {
-		Auth::redirect(Site::getBaseURL());
+		CMS\Auth::redirect(CMS\Site::getBaseURL());
 	}
 
-	Pages::setCurrentPage($currentPage);
-	include Theme::getThemeDirectory() . "/index.php";
+	CMS\Pages::setCurrentPage($currentPage);
+	include CMS\Theme::getThemeDirectory() . "/index.php";
 	die();
 }
 
@@ -51,29 +57,29 @@ if (isset($_GET["slug"])) {
 if (isset($_GET["id"])) {
 	// if the page ID is invalid, return a 404 response
 	try {
-		$currentPage = Page::withID($_GET["id"]);
+		$currentPage = CMS\Page::withID($_GET["id"]);
 	} catch (Exception $e) {
-		Site::set404Response();
+		CMS\Site::set404Response();
 	}
 
 	// if on the homepage, redirect Site::getBaseURL (this will run again and reach the bottom)
 	if ($currentPage->isHomepage()) {
-		Auth::redirect(Site::getBaseURL());
+		CMS\Auth::redirect(Site::getBaseURL());
 	}
 
-	Pages::setCurrentPage($currentPage);
-	include Theme::getThemeDirectory() . "/index.php"; // TODO if the active theme has a page.php file, use that instead
+	CMS\Pages::setCurrentPage($currentPage);
+	include CMS\Theme::getThemeDirectory() . "/index.php"; // TODO if the active theme has a page.php file, use that instead
 	die();
 }
 
 // delete page requested by page ID
-if (isset($_GET["delete"]) && Validate::int($_GET["delete"])) {
+if (isset($_GET["delete"]) && CMS\Validate::int($_GET["delete"])) {
 	include "actions/pagedelete.php";
 	die();
 }
 
 // edit page requested by page ID
-if (isset($_GET["edit"]) && Validate::int($_GET["edit"])) {
+if (isset($_GET["edit"]) && CMS\Validate::int($_GET["edit"])) {
 	include "actions/pageedit.php";
 	die();
 }
@@ -101,6 +107,6 @@ if (isset($_GET["pages"])) {
 
 
 // if nothing else is requested, load the homepage
-Pages::setCurrentPage(Page::getHomepage());
-include Theme::getThemeDirectory() . "/index.php";
+CMS\Pages::setCurrentPage(CMS\Page::getHomepage());
+include CMS\Theme::getThemeDirectory() . "/index.php";
 die;

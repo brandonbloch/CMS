@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 class Site extends SettingAbstract {
 
 	// Make these private to prevent instantiation
@@ -47,10 +49,10 @@ class Site extends SettingAbstract {
 	 */
 	public static function setTitle($title) {
 		if (!is_string($title)) {
-			throw new InvalidArgumentException("Site::setTitle expected string, got " . gettype($title) . " instead.");
+			throw new \InvalidArgumentException("Site::setTitle expected string, got " . gettype($title) . " instead.");
 		}
 		if (!Validate::plainText($title)) {
-			throw new InvalidArgumentException("Invalid string content supplied to Site::setTitle.");
+			throw new \InvalidArgumentException("Invalid string content supplied to Site::setTitle.");
 		}
 		self::$title = $title;
 		self::saveValueToDatabase($title, "site_title");
@@ -71,10 +73,10 @@ class Site extends SettingAbstract {
 	 */
 	public static function setDescription($description) {
 		if (!is_string($description)) {
-			throw new InvalidArgumentException("Site::setDescription expected string, got " . gettype($description) . " instead.");
+			throw new \InvalidArgumentException("Site::setDescription expected string, got " . gettype($description) . " instead.");
 		}
 		if (!Validate::plainText($description)) {
-			throw new InvalidArgumentException("Invalid string content supplied to Site::setDescription.");
+			throw new \InvalidArgumentException("Invalid string content supplied to Site::setDescription.");
 		}
 		self::$description = $description;
 		self::saveValueToDatabase($description, "site_description");
@@ -89,10 +91,10 @@ class Site extends SettingAbstract {
 
 	public static function setAdminName($name) {
 		if (!is_string($name)) {
-			throw new InvalidArgumentException("Site::setAdminName expected string, got " . gettype($name) . " instead.");
+			throw new \InvalidArgumentException("Site::setAdminName expected string, got " . gettype($name) . " instead.");
 		}
 		if (!Validate::name($name)) {
-			throw new InvalidArgumentException("Invalid name supplied to Site::setAdminName.");
+			throw new \InvalidArgumentException("Invalid name supplied to Site::setAdminName.");
 		}
 		self::$adminName = $name;
 		self::saveValueToDatabase($name, "admin_name");
@@ -107,10 +109,10 @@ class Site extends SettingAbstract {
 
 	public static function setAdminEmail($email) {
 		if (!is_string($email)) {
-			throw new InvalidArgumentException("Site::setAdminEmail expected string, got " . gettype($email) . " instead.");
+			throw new \InvalidArgumentException("Site::setAdminEmail expected string, got " . gettype($email) . " instead.");
 		}
 		if (!Validate::email($email)) {
-			throw new InvalidArgumentException("Invalid email address supplied to Site::setAdminEmail.");
+			throw new \InvalidArgumentException("Invalid email address supplied to Site::setAdminEmail.");
 		}
 		self::$adminEmail = $email;
 		self::saveValueToDatabase($email, "admin_email");

@@ -1,14 +1,14 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title><?php echo LABEL_MANAGE_PAGES; ?> - <?php echo Site::getTitle() ?></title>
-	<link rel="stylesheet" href="<?php echo Theme::getStylesheetLink() ?>">
+	<title><?php echo LABEL_MANAGE_PAGES; ?> - <?php echo CMS\Site::getTitle() ?></title>
+	<link rel="stylesheet" href="<?php echo CMS\Theme::getStylesheetLink() ?>">
 </head>
-<body class="<?php echo Theme::getBodyClasses(); ?> cms-admin-page cms-pages">
+<body class="<?php echo CMS\Theme::getBodyClasses(); ?> cms-admin-page cms-pages">
 
 <div class="cms-admin-page-interior">
 
-	<h1><a href="<?php echo Site::getBaseURL(); ?>/?addpage" title="<?php echo LABEL_ADD_PAGE; ?>" class="float-right"><i class="fa fa-<?php echo ICON_ADD_PAGE; ?>"></i></a><i class="fa fa-<?php echo ICON_MANAGE_PAGES; ?>"></i><?php echo LABEL_MANAGE_PAGES; ?></h1>
+	<h1><a href="<?php echo CMS\Site::getBaseURL(); ?>/?addpage" title="<?php echo LABEL_ADD_PAGE; ?>" class="float-right"><i class="fa fa-<?php echo ICON_ADD_PAGE; ?>"></i></a><i class="fa fa-<?php echo ICON_MANAGE_PAGES; ?>"></i><?php echo LABEL_MANAGE_PAGES; ?></h1>
 
 	<table class="cms-admin-table">
 		<thead>
@@ -19,12 +19,12 @@
 			</tr>
 		</thead>
 		<tbody>
-		<?php echo Pages::getPageHierarchyTableList(); ?>
+		<?php echo CMS\Pages::getPageHierarchyTableList(); ?>
 		</tbody>
 	</table>
 
 </div>
 
-<?php Core::includeCore(); ?>
+<?php CMS\Core::includeCore(); ?>
 </body>
 </html>

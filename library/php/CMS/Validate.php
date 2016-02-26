@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 /**
  * Validate class
  *
@@ -9,6 +11,9 @@
  * @version 1.0
  */
 class Validate {
+
+	const USERNAME_MIN_LENGTH = 8;
+	const PASSWORD_MIN_LENGTH = 8;
 
 	private static $initialized = false;
 
@@ -227,7 +232,7 @@ class Validate {
 		if ($username !== strip_tags($username)) {
 			return false;
 		}
-		if (strlen($username) < USERNAME_MIN_LENGTH) {
+		if (strlen($username) < self::USERNAME_MIN_LENGTH) {
 			return false;
 		}
 		return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9_\\-\\.]*$/", $username) === 1);
@@ -245,7 +250,7 @@ class Validate {
 		if ($date === false) {
 			return false;
 		}
-		if ($date instanceof DateTime) {
+		if ($date instanceof \DateTime) {
 			return true;
 		}
 		if (is_null($date) || !isset($date)) {
@@ -258,11 +263,10 @@ class Validate {
 			return false;
 		}
 
-		// TODO double-check this list of formats. It definitely isn't complete. Also align it with the set of formats Format::date() will accept
 		$formats = array("d.m.Y", "d/m/Y", "Ymd", Format::DATE_FORMAT, Format::BIRTHDAY_FORMAT, Format::MYSQL_DATE_FORMAT, Format::MYSQL_TIMESTAMP_FORMAT);
 
 		foreach ($formats as $format) {
-			$output = DateTime::createFromFormat($format, $date);
+			$output = \DateTime::createFromFormat($format, $date);
 			if ($output !== false) {
 				return true;
 			}
@@ -292,7 +296,7 @@ class Validate {
 		if (strip_tags($password) !== $password) {
 			return false;
 		}
-		if (strlen($password) < PASSWORD_MIN_LENGTH) {
+		if (strlen($password) < self::PASSWORD_MIN_LENGTH) {
 			return false;
 		}
 		return true;

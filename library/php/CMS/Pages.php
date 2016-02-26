@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 class Pages {
 
 	private static $currentPage;
@@ -25,7 +27,7 @@ class Pages {
 	 */
 	public static function setCurrentPage(Page $currentPage) {
 		if (self::$currentPage !== NULL) {
-			throw new BadMethodCallException("The current page is already set.");
+			throw new \BadMethodCallException("The current page is already set.");
 		}
 		self::$currentPage = $currentPage;
 	}
@@ -42,7 +44,7 @@ class Pages {
 		$type = array();
 		$type["name"] = $name;
 		if (!Validate::int($options["zones"])) {
-			throw new InvalidArgumentException("Invalid number of editable zones supplied to Pages::registerPageType.");
+			throw new \InvalidArgumentException("Invalid number of editable zones supplied to Pages::registerPageType.");
 		}
 		if (!file_exists(Theme::getThemeDirectory() . "/" . $options["template"])) {
 //			throw new InvalidArgumentException("The specified page template file does not exist.");
@@ -85,7 +87,7 @@ class Pages {
 			$atts = "";
 
 			// select the proper page
-			if ( $selectedPageID == $page->getID() ) {
+			if ($selectedPageID == $page->getID()) {
 				$atts .= " selected";
 			}
 			// if we're disabling a page and all its descendants, do it here
@@ -164,7 +166,7 @@ class Pages {
 			$stmt->execute();
 			$result = $stmt->fetch();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			if (isset($result[0])) {
 				if ($result[0]  == 0) {
@@ -173,8 +175,8 @@ class Pages {
 				return true;
 			}
 			return false;
-		} catch (PDOException $e) {
-			throw new InvalidArgumentException("Unable to check if slug already exists.");
+		} catch (\PDOException $e) {
+			throw new \InvalidArgumentException("Unable to check if slug already exists.");
 		}
 	}
 

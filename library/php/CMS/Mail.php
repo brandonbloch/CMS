@@ -1,15 +1,13 @@
 <?php
 
+namespace CMS;
+
 class Mail {
 
 	private static $initialized = false;
 
 	private function __construct() {}
 	private function __clone() {}
-
-	const FROM_NAME = "WebServant";
-	const FROM_EMAIL = MAILING_EMAIL;
-	const REPLYTO_EMAIL = ADMIN_EMAIL;
 
 	private static function initialize() {
 		if (self::$initialized) {
@@ -18,11 +16,11 @@ class Mail {
 		self::$initialized = true;
 	}
 
-	public static function sendPlain($recipient, $subject, $message, $senderName = self::FROM_NAME, $senderEmail = self::FROM_EMAIL) {
+	public static function sendPlain($recipient, $subject, $message, $senderName, $senderEmail) {
 		self::initialize();
 
 		if (!Validate::email($recipient)) {
-			throw new InvalidArgumentException("Invalid email address provided for recipient.");
+			throw new \InvalidArgumentException("Invalid email address provided for recipient.");
 		}
 
 		$headers = "From: " . $senderName . " <" . $senderEmail . ">\r\n";
@@ -35,11 +33,11 @@ class Mail {
 
 	}
 
-	public static function sendHTML($recipient, $subject, $message, $senderName = self::FROM_NAME, $senderEmail = self::FROM_EMAIL) {
+	public static function sendHTML($recipient, $subject, $message, $senderName, $senderEmail) {
 		self::initialize();
 
 		if (!Validate::email($recipient)) {
-			throw new InvalidArgumentException("Invalid email address provided for recipient.");
+			throw new \InvalidArgumentException("Invalid email address provided for recipient.");
 		}
 
 		$headers = "From: " . $senderName . " <" . $senderEmail . ">\r\n";
@@ -63,7 +61,7 @@ class Mail {
 		$fileatt = $attachment["tmp_name"]; // path to the file
 		$fileatt_name = $attachment["name"]; // filename that will be used for the attachment
 
-		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$finfo = finfo_open(\FILEINFO_MIME_TYPE);
 		$fileatt_type = finfo_file($finfo, $fileatt);
 		finfo_close($finfo);
 

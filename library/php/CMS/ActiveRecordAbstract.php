@@ -1,5 +1,6 @@
 <?php
 
+namespace CMS;
 
 /**
  * Class ActiveRecordAbstract
@@ -41,8 +42,8 @@ abstract class ActiveRecordAbstract {
 			try {
 				$id = (int) $id;
 				$this->id  = $id;
-			} catch (Exception $e) {
-				throw new InvalidArgumentException("Expected int for instance ID, got " . gettype($id) . " instead.");
+			} catch (\Exception $e) {
+				throw new \InvalidArgumentException("Expected int for instance ID, got " . gettype($id) . " instead.");
 			}
 		}
 	}

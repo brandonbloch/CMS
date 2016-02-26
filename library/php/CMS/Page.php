@@ -1,6 +1,9 @@
 <?php
 
+namespace CMS;
+
 class Page extends ActiveRecordAbstract {
+
 
 	private $parentID;
 	private $title;
@@ -25,7 +28,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	private static function withDatabaseRecord(array $row) {
 		if (!isset($row["id"])) {
-			throw new InvalidArgumentException("Missing page ID from constructor.");
+			throw new \InvalidArgumentException("Missing page ID from constructor.");
 		}
 		if (!isset($row["parent"])) {
 			$row["parent"] = 0;
@@ -34,10 +37,10 @@ class Page extends ActiveRecordAbstract {
 			$row["title"] = "";
 		}
 		if (!isset($row["short_title"])) {
-			throw new InvalidArgumentException("Missing page short title from constructor.");
+			throw new \InvalidArgumentException("Missing page short title from constructor.");
 		}
 		if (!isset($row["slug"])) {
-			throw new InvalidArgumentException("Missing page slug from constructor.");
+			throw new \InvalidArgumentException("Missing page slug from constructor.");
 		}
 		if (!isset($row["content"])) {
 			$row["content"] = "";
@@ -54,11 +57,11 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public static function withID($id) {
 		if (!Validate::int($id)) {
-			throw new InvalidArgumentException("Page::withID expected int, got " . gettype($id) . " instead.");
+			throw new \InvalidArgumentException("Page::withID expected int, got " . gettype($id) . " instead.");
 		}
 		$id = (int) $id;
 		if ($id <= 0) {
-			throw new OutOfRangeException("Page IDs must all be greater than 0.");
+			throw new \OutOfRangeException("Page IDs must all be greater than 0.");
 		}
 		try {
 			$pdo    = DB::getHandle();
@@ -67,11 +70,11 @@ class Page extends ActiveRecordAbstract {
 			$stmt->execute();
 			$result = $stmt->fetch();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			return self::withDatabaseRecord($result);
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve page from the database with ID " . $id . ".");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve page from the database with ID " . $id . ".");
 		}
 	}
 
@@ -82,7 +85,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public static function withSlug($slug) {
 		if (!Validate::plainText($slug)) {
-			throw new OutOfRangeException("Invalid slug supplied to Page::withSlug.");
+			throw new \OutOfRangeException("Invalid slug supplied to Page::withSlug.");
 		}
 		try {
 			$pdo    = DB::getHandle();
@@ -91,11 +94,11 @@ class Page extends ActiveRecordAbstract {
 			$stmt->execute();
 			$result = $stmt->fetch();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			return self::withDatabaseRecord($result);
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve page from the database with slug '" . $slug . "'.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve page from the database with slug '" . $slug . "'.");
 		}
 	}
 
@@ -108,15 +111,15 @@ class Page extends ActiveRecordAbstract {
 			$stmt   = $pdo->query("SELECT id, parent, title, short_title, slug FROM pages");
 			$result = $stmt->fetchAll();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			$pages = array();
 			foreach ($result as $page) {
 				$pages[$page["id"]] = self::withDatabaseRecord($page);
 			}
 			return $pages;
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve page list from the database.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve page list from the database.");
 		}
 	}
 
@@ -129,7 +132,7 @@ class Page extends ActiveRecordAbstract {
 			$stmt   = $pdo->query("SELECT id, title, short_title, slug FROM pages WHERE parent = 0");
 			$result = $stmt->fetchAll();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			$pages = array();
 			foreach ($result as $page) {
@@ -137,8 +140,8 @@ class Page extends ActiveRecordAbstract {
 				$pages[$page["id"]] = self::withDatabaseRecord($page);
 			}
 			return $pages;
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve top-level page list from the database.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve top-level page list from the database.");
 		}
 	}
 
@@ -156,7 +159,7 @@ class Page extends ActiveRecordAbstract {
 		$page = new self($parentID, $title, $shortname, $slug, "");
 		$success = $page->insert();
 		if (!$success) {
-			throw new RuntimeException("Unable to save new page to the database.");
+			throw new \RuntimeException("Unable to save new page to the database.");
 		}
 		return $page;
 	}
@@ -173,7 +176,7 @@ class Page extends ActiveRecordAbstract {
 			$stmt->execute();
 			$this->setID($pdo->lastInsertId());
 			return true;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return false;
 		}
 	}
@@ -193,7 +196,7 @@ class Page extends ActiveRecordAbstract {
 			$stmt->bindParam(":id", $this->id);
 			$stmt->execute();
 			return true;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return false;
 		}
 	}
@@ -203,7 +206,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public function delete() {
 		if (!$this->id) {
-			throw new BadMethodCallException("Attempt to delete nonexistent page.");
+			throw new \BadMethodCallException("Attempt to delete nonexistent page.");
 		}
 		try {
 			$pdo  = DB::getHandle();
@@ -211,7 +214,7 @@ class Page extends ActiveRecordAbstract {
 			$stmt->bindParam(":id", $this->id);
 			$stmt->execute();
 			return true;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return false;
 		}
 	}
@@ -232,7 +235,7 @@ class Page extends ActiveRecordAbstract {
 
 	public function setParentID($id) {
 		if (!Validate::int($id)) {
-			throw new InvalidArgumentException("setParentID expected int, got " . gettype($id) . " instead.");
+			throw new \InvalidArgumentException("setParentID expected int, got " . gettype($id) . " instead.");
 		}
 		$this->parentID = (int) $id;
 	}
@@ -248,15 +251,15 @@ class Page extends ActiveRecordAbstract {
 			$stmt->execute();
 			$result = $stmt->fetchAll();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			$childIDs = array();
 			foreach ($result as $row) {
 				$childIDs[] = (int) $row;
 			}
 			return $childIDs;
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve child page ID list from the database.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve child page ID list from the database.");
 		}
 	}
 
@@ -271,15 +274,15 @@ class Page extends ActiveRecordAbstract {
 			$stmt->execute();
 			$result = $stmt->fetchAll();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
 			$childIDs = array();
 			foreach ($result as $row) {
 				$childIDs[] = self::withDatabaseRecord($row);
 			}
 			return $childIDs;
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve child page list from the database.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve child page list from the database.");
 		}
 	}
 
@@ -331,7 +334,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public function setTitle($title) {
 		if (!Validate::plainText($title, true)) {
-			throw new InvalidArgumentException("Invalid string content supplied to setTitle.");
+			throw new \InvalidArgumentException("Invalid string content supplied to setTitle.");
 		}
 		$this->title = $title;
 	}
@@ -348,7 +351,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public function setShortname($shortname) {
 		if (!Validate::plainText($shortname)) {
-			throw new InvalidArgumentException("Invalid string content supplied to setShortname.");
+			throw new \InvalidArgumentException("Invalid string content supplied to setShortname.");
 		}
 		$this->shortname = $shortname;
 	}
@@ -365,7 +368,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public function setSlug($slug) {
 		if (!Validate::slug($slug)) {
-			throw new InvalidArgumentException("Invalid string content supplied to setSlug.");
+			throw new \InvalidArgumentException("Invalid string content supplied to setSlug.");
 		}
 		$this->slug = $slug;
 	}
@@ -382,7 +385,7 @@ class Page extends ActiveRecordAbstract {
 	 */
 	public function setContent($content) {
 		if (!Validate::plainText($content, true)) {
-			throw new InvalidArgumentException("Invalid string content supplied to setContent.");
+			throw new \InvalidArgumentException("Invalid string content supplied to setContent.");
 		}
 		$this->content = $content;
 	}

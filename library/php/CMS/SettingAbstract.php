@@ -1,5 +1,7 @@
 <?php
 
+namespace CMS;
+
 abstract class SettingAbstract {
 
 	protected static function getValueFromDatabase($shortname) {
@@ -10,10 +12,10 @@ abstract class SettingAbstract {
 			$stmt->execute();
 			$result = $stmt->fetch();
 			if ($result === false) {
-				throw new PDOException();
+				throw new \PDOException();
 			}
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to retrieve " . $shortname . " from the database.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve " . $shortname . " from the database.");
 		}
 		return $result["value"];
 	}
@@ -25,8 +27,8 @@ abstract class SettingAbstract {
 			$stmt->bindParam(":value", $value);
 			$stmt->bindParam(":short_name", $shortname);
 			$stmt->execute();
-		} catch (PDOException $e) {
-			throw new RuntimeException("Unable to save " . $shortname . " to the database.");
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to save " . $shortname . " to the database.");
 		}
 	}
 
