@@ -43,7 +43,7 @@ class Auth {
 		self::sessionRegenerate();
 		if (!isset($_SESSION['active'])) {
 			$_SESSION['active'] = 1;
-			$_SESSION['ip_address'] = self::trimIP(self::get_ip_address());
+			$_SESSION['ip_address'] = Browser::trimIP(self::get_ip_address());
 			$_SESSION['user_agent'] = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
 			$_SESSION['logged_in'] = 0;
 			$_SESSION['last_activity'] = time();
@@ -118,16 +118,6 @@ class Auth {
 		}
 		
 		return false;
-	}
-
-	/**
-	 * Redirect the user to a new location
-	 *
-	 * @param string $location      The page to redirect the user to. Relative or absolute links are accepted.
-	 */
-	public static function redirect($location) {
-		header("Location: " . $location);
-//		exit();
 	}
 
 	/**
@@ -251,9 +241,10 @@ class Auth {
 	public static function getNewResetKey() {
 		self::initialize();
 		$characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+		$numChars = strlen($characters);
 		$key = "";
 		for ($i = 0; $i < 23; $i++) {
-			$key .= $characters[mt_rand(0, strlen($characters) - 1)];
+			$key .= $characters[mt_rand(0, $numChars - 1)];
 		}
 		return $key;
 	}
@@ -302,42 +293,6 @@ class Auth {
 			return false;
 		}
 		return ($password1 === $password2);
-	}
-
-	// Return the client's IP address, used in verifying continued session validity
-	private static function get_ip_address() {
-		$ip_keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
-		foreach ($ip_keys as $key) {
-			if (array_key_exists($key, $_SERVER) === true) {
-				foreach (explode(',', $_SERVER[$key]) as $ip) {
-					// trim for safety measures
-					$ip = trim($ip);
-					// attempt to validate IP
-					if (self::validate_ip($ip)) {
-						return $ip;
-					}
-				}
-			}
-		}
-
-		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
-	}
-
-	// Ensures an IP address is both a valid IP and does not fall within a private network range.
-	private static function validate_ip($ip) {
-		if (filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4 | \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE) === false) {
-			return false;
-		}
-		return true;
-	}
-
-	// Trims the IP address and returns it in the format XXX.XXX.XXX.0
-	private static function trimIP($ip) {
-		$pos = strrpos($ip, '.');
-		if ($pos !== false) {
-			$ip = substr($ip, 0, $pos+1);
-		}
-		return $ip . '0';
 	}
 	
 }

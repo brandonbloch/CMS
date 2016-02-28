@@ -67,7 +67,7 @@ class FileReadWrite {
 		// delete any old remaining file(s?) before overwriting
 		self::writePDF(false, $directory, $filenameWithoutExtension, self::$fileExtensionsPDF);
 		// upload the new file and return the result
-		$newPath = $filePathWithoutExtension . "." . strtolower(pathinfo($newFile["name"], PATHINFO_EXTENSION));
+		$newPath = $filePathWithoutExtension . "." . mb_strtolower(pathinfo($newFile["name"], PATHINFO_EXTENSION));
 		if (move_uploaded_file($newFile["tmp_name"], $newPath)) {
 			return true;
 		} else {
@@ -132,7 +132,7 @@ class FileReadWrite {
 		// delete any old remaining file(s?) before overwriting
 		self::writeImage(false, $directory, $filenameWithoutExtension);
 		// upload the new file and return the result
-		$newPath = $filePathWithoutExtension . "." . strtolower(pathinfo($newFile["name"], PATHINFO_EXTENSION));
+		$newPath = $filePathWithoutExtension . "." . mb_strtolower(pathinfo($newFile["name"], PATHINFO_EXTENSION));
 		return move_uploaded_file($newFile["tmp_name"], $newPath);
 	}
 

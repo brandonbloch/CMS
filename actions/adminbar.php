@@ -5,7 +5,9 @@
 			border-color: #ccc;
 		}
 		.admin-bar a:hover,
-		.admin-bar a:focus {
+		.admin-bar a:focus,
+		.admin-bar button:hover,
+		.admin-bar button:focus {
 			color: #333;
 		}
 		body.cms-page-add .admin-bar .admin-bar-button-page-add,
@@ -35,17 +37,26 @@
 <?php } ?>
 
 <div class="admin-bar">
-	<div class="admin-bar-group admin-bar-group-left">
-		<a class="admin-bar-button-home" href="<?php echo CMS\Site::getBaseURL(); ?>/" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOME); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOME); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_HOME); ?>"></i></a>
-		<a class="admin-bar-button-pages" href="<?php echo CMS\Site::getBaseURL(); ?>/?pages" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_MANAGE_PAGES); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_MANAGE_PAGES); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_MANAGE_PAGES); ?>"></i></a>
-		<a class="admin-bar-button-page-add" href="<?php echo CMS\Site::getBaseURL(); ?>/?addpage" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_ADD_PAGE); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_ADD_PAGE); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_ADD_PAGE); ?>"></i></a>
-		<?php if (CMS\Pages::getCurrentPage() !== NULL) { ?>
-			<a class="admin-bar-button-page-settings" href="<?php echo CMS\Site::getBaseURL(); ?>/?edit=<?php echo CMS\Pages::getCurrentPage()->getID(); ?>&settings" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_PAGE_SETTINGS); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_PAGE_SETTINGS); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_PAGE_SETTINGS); ?>"></i></a>
-			<a class="admin-bar-button-page-edit" href="<?php echo CMS\Site::getBaseURL(); ?>/?edit=<?php echo CMS\Pages::getCurrentPage()->getID(); ?>" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE); ?>"></i></a>
-		<?php } ?>
-	</div>
-	<div class="admin-bar-group admin-bar-group-right">
-		<a class="admin-bar-button-settings" href="<?php echo CMS\Site::getBaseURL(); ?>/?settings" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_SETTINGS); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_SETTINGS); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_SETTINGS); ?>"></i></a>
-		<a class="admin-bar-button-logout" href="<?php echo CMS\Site::getBaseURL(); ?>/?logout" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_LOGOUT); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_LOGOUT); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_LOGOUT); ?>"></i></a>
-	</div>
+	<?php if (isset($_GET["edit"]) && !isset($_GET["settings"])) { ?>
+		<div class="admin-bar-group admin-bar-group-left">
+			<form action="" method="post">
+				<button class="admin-bar-button-page-edit-save" type="submit" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_SAVE); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_SAVE); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_SAVE); ?>"></i></button>
+			</form>
+			<a class="admin-bar-button-page-edit-cancel" href="<?php echo CMS\Pages::getCurrentPage()->getURL(); ?>" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_CANCEL); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_CANCEL); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_CANCEL); ?>"></i></a>
+		</div>
+	<?php } else { ?>
+		<div class="admin-bar-group admin-bar-group-left">
+			<a class="admin-bar-button-home" href="<?php echo CMS\Site::getBaseURL(); ?>/" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOME); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOME); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_HOME); ?>"></i></a>
+			<a class="admin-bar-button-pages" href="<?php echo CMS\Site::getBaseURL(); ?>/?pages" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_MANAGE_PAGES); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_MANAGE_PAGES); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_MANAGE_PAGES); ?>"></i></a>
+			<a class="admin-bar-button-page-add" href="<?php echo CMS\Site::getBaseURL(); ?>/?addpage" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_ADD_PAGE); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_ADD_PAGE); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_ADD_PAGE); ?>"></i></a>
+			<?php if (CMS\Pages::getCurrentPage() !== NULL) { ?>
+				<a class="admin-bar-button-page-settings" href="<?php echo CMS\Site::getBaseURL(); ?>/?edit=<?php echo CMS\Pages::getCurrentPage()->getID(); ?>&settings" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_PAGE_SETTINGS); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_PAGE_SETTINGS); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_PAGE_SETTINGS); ?>"></i></a>
+				<a class="admin-bar-button-page-edit" href="<?php echo CMS\Site::getBaseURL(); ?>/?edit=<?php echo CMS\Pages::getCurrentPage()->getID(); ?>" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE); ?>"></i></a>
+			<?php } ?>
+		</div>
+		<div class="admin-bar-group admin-bar-group-right">
+			<a class="admin-bar-button-settings" href="<?php echo CMS\Site::getBaseURL(); ?>/?settings" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_SETTINGS); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_SETTINGS); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_SETTINGS); ?>"></i></a>
+			<a class="admin-bar-button-logout" href="<?php echo CMS\Site::getBaseURL(); ?>/?logout" data-title="<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_LOGOUT); ?>"><span class="admin-bar-button-label"><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_LOGOUT); ?></span><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_LOGOUT); ?>"></i></a>
+		</div>
+	<?php } ?>
 </div>

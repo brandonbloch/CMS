@@ -47,7 +47,7 @@ class Validate {
 		if (!isset($value)) {
 			return false;
 		}
-		return (is_int($value) || ctype_digit($value));
+		return (is_int($value) || (is_string($value) && ctype_digit($value)));
 	}
 
 	/**
@@ -92,7 +92,7 @@ class Validate {
 		if (trim($string) === "") {
 			return ($allowEmpty) ? true : false;
 		}
-		if (stripos($string, "<?php") !== false || stripos($string, "?>" !== false)) {
+		if (mb_stripos($string, "<?php") !== false || mb_stripos($string, "?>" !== false)) {
 			return false;
 		}
 		return true;
@@ -232,7 +232,7 @@ class Validate {
 		if ($username !== strip_tags($username)) {
 			return false;
 		}
-		if (strlen($username) < self::USERNAME_MIN_LENGTH) {
+		if (mb_strlen($username) < self::USERNAME_MIN_LENGTH) {
 			return false;
 		}
 		return (preg_match("/^[a-zA-Z0-9][a-zA-Z0-9_\\-\\.]*$/", $username) === 1);
@@ -296,7 +296,15 @@ class Validate {
 		if (strip_tags($password) !== $password) {
 			return false;
 		}
-		if (strlen($password) < self::PASSWORD_MIN_LENGTH) {
+		if (mb_strlen($password) < self::PASSWORD_MIN_LENGTH) {
+			return false;
+		}
+		return true;
+	}
+
+	// Ensures an IP address is both a valid IP and does not fall within a private network range.
+	public static function IP($ip) {
+		if (filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4 | \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE) === false) {
 			return false;
 		}
 		return true;

@@ -1,10 +1,10 @@
 <script>
-	_baseURL = "<?php echo CMS\Site::getBaseURL(); ?>";
-	onload = function () {
-		var input = document.getElementById("page_shortname");
-		input.oninput = shortname_preview_update;
-		input.onpropertychange = input.oninput;     // for IE8
-	};
+	var _baseURL = "<?php echo CMS\Site::getBaseURL(); ?>";
+	var input = document.getElementById("page_shortname");
+
+	input.oninput = shortname_preview_update;
+	input.onpropertychange = input.oninput;     // for IE8
+
 	function shortname_preview_update () {
 		var shortname = document.getElementById("page_shortname").value;
 		if (shortname.trim() === "") {

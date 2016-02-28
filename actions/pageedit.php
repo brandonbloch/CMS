@@ -4,7 +4,7 @@ try {
 	$page = CMS\Page::withID($_GET["edit"]);
 	CMS\Pages::setCurrentPage($page);
 } catch (Exception $e) {
-	CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
 $data = array(

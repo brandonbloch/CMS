@@ -60,7 +60,7 @@ class Format {
 	 * @return string           The truncated string, with an ellipsis if any characters were cut off
 	 */
 	public static function truncate($string, $maxChars = 50) {
-		return (strlen($string) > $maxChars + 3) ? substr($string, 0, $maxChars) . "..." : $string;
+		return (mb_strlen($string) > $maxChars + 3) ? mb_substr($string, 0, $maxChars) . "..." : $string;
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Format {
 
 	public static function slug($string) {
 		$slug = str_replace("-", " ", $string);
-		$slug = strtolower($slug);
+		$slug = mb_strtolower($slug);
 		$slug = preg_replace("/[^A-Za-z0-9 ]/", "", $slug);
 		$slug = preg_replace("/ +/", "-", $slug);
 		return $slug;

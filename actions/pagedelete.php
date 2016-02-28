@@ -4,11 +4,11 @@ try {
 	$page = CMS\Page::withID( $_GET["delete"] );
 	CMS\Pages::setCurrentPage($page);
 } catch (Exception $e) {
-	CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
 if ($page->isHomepage()) {
-	CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
 $data = array(
@@ -35,7 +35,7 @@ if (isset($_POST["page_delete_submit"])) {
 
 				$success = $page->delete();
 				if ($success) {
-					CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+					CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 				} else {
 					$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageCollector::DANGER);
 				}
@@ -48,7 +48,7 @@ if (isset($_POST["page_delete_submit"])) {
 				}
 				$success = $page->delete();
 				if ($success) {
-					CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+					CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 				} else {
 					$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageCollector::DANGER);
 				}
@@ -63,9 +63,9 @@ if (isset($_POST["page_delete_submit"])) {
 		if ($success) {
 
 			if (isset($_GET["redirect"]) && $_GET["redirect"] == "home") {
-				CMS\Auth::redirect(CMS\Site::getBaseURL());
+				CMS\Browser::redirect(CMS\Site::getBaseURL());
 			} else {
-				CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+				CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 			}
 
 		} else {

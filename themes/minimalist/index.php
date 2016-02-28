@@ -1,14 +1,21 @@
-<?php $page = CMS\Pages::getCurrentPage(); ?>
+<?php
+use CMS\Core as Core;
+use CMS\Pages as Pages;
+use CMS\Site as Site;
+use CMS\Library\Markdown as Markdown;
+?>
+
+<?php $page = Pages::getCurrentPage(); ?>
 
 <html>
 <head>
-	<title><?php echo CMS\Site::getTitle(); ?></title>
+	<title><?php echo Site::getTitle(); ?></title>
 </head>
 <body>
 
-<?php echo CMS\Markdown::parse($page->getContent());
+<?php echo $page->getZoneOutput(0);
 
-CMS\Core::includeCore(); ?>
+Core::includeCore(); ?>
 
 </body>
 </html>

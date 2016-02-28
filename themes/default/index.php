@@ -1,9 +1,12 @@
 <?php
 
-$page = CMS\Pages::getCurrentPage();
+use \CMS\Pages as Pages;
+use \CMS\Theme as Theme;
 
-CMS\Theme::includeHeader();
+$page = Pages::getCurrentPage();
 
-echo CMS\Library\Markdown::parse($page->getContent());
+Theme::includeHeader();
 
-CMS\Theme::includeFooter();
+echo $page->getZoneOutput(0);
+
+Theme::includeFooter();

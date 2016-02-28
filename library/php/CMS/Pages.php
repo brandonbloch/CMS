@@ -7,6 +7,7 @@ class Pages {
 	private static $currentPage;
 	private static $pageTypes = array(
 		0 => array(
+			"identifier" => "default",
 			"name" => "Single Zone",
 			"description" => "A blank page with one large editable zone.",
 			"zones" => 1,
@@ -32,7 +33,7 @@ class Pages {
 		self::$currentPage = $currentPage;
 	}
 
-	public static function registerPageType($name, array $options = array()) {
+	public static function registerPageType($identifier, $name, array $options = array()) {
 		$defaults = array(
 			"icon" => NULL,
 			"description" => NULL,
@@ -42,6 +43,18 @@ class Pages {
 		$options = array_merge($defaults, $options);
 
 		$type = array();
+		if (!Library\Validate::plainText($identifier)) {
+			throw new \InvalidArgumentException("Invalid page type identifier supplied to Pages::registerPageType.");
+		}
+		foreach (self::$pageTypes as $existingType) {
+			if ($existingType["identifier"] == $identifier) {
+				throw new \InvalidArgumentException("Page type identifier '" . $identifier . "' already exists.");
+			}
+		}
+		$type["identifier"] = $identifier;
+		if (!Library\Validate::plainText($name)) {
+			throw new \InvalidArgumentException("Invalid page type name supplied to Pages::registerPageType.");
+		}
 		$type["name"] = $name;
 		if (!Library\Validate::int($options["zones"])) {
 			throw new \InvalidArgumentException("Invalid number of editable zones supplied to Pages::registerPageType.");
@@ -65,6 +78,34 @@ class Pages {
 	 */
 	public static function getPageTypes() {
 		return self::$pageTypes;
+	}
+
+	/**
+	 * @param string $identifier
+	 *
+	 * @return bool
+	 */
+	public static function pageTypeExists($identifier) {
+		foreach (self::$pageTypes as $pageType) {
+			if ($pageType["identifier"] == $identifier) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param string $identifier
+	 *
+	 * @return array
+	 */
+	public static function getPageType($identifier) {
+		foreach (self::$pageTypes as $pageType) {
+			if ($pageType["identifier"] == $identifier) {
+				return $pageType;
+			}
+		}
+		throw new \OutOfBoundsException("Nonexistent page type identifier supplied to Pages::getPageType.");
 	}
 
 	/**
@@ -131,6 +172,12 @@ class Pages {
 				$labelPrefix = '<span class="child-indent">' . $prefix . '</span> ';
 			}
 
+			if ($page->getVisibility() == Page::VISIBILITY_PRIVATE) {
+				$labelPrefix .= '<i class="fa fa-lock" title="Private page" style="margin-right: 0.35em;"></i>';
+			} else if ($page->getVisibility() == Page::VISIBILITY_SECRET) {
+				$labelPrefix .= '<i class="fa fa-user-secret" title="Secret page" style="margin-right: 0.35em;"></i>';
+			}
+
 			$string .= '<tr>' . PHP_EOL;
 
 			$string .= '<td>' . $labelPrefix . '<a href="' . $page->getURL() . '">' . $page->getTitle() . '</a></td>' . PHP_EOL;
@@ -138,12 +185,12 @@ class Pages {
 			$string .= '<td>' . $page->getShortname() . '</td>' . PHP_EOL;
 
 			$string .= '<td class="actions-list">';
-			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&settings" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_PAGE_SETTINGS) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_PAGE_SETTINGS) . '"></i></a>';
-			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_EDIT_PAGE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_EDIT_PAGE) . '"></i></a>';
+			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&settings" title="' . Localization::getLocalizedString(Localization::LABEL_PAGE_SETTINGS) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_PAGE_SETTINGS) . '"></i></a>';
+			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '" title="' . Localization::getLocalizedString(Localization::LABEL_EDIT_PAGE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_EDIT_PAGE) . '"></i></a>';
 			if ($page->isHomepage()) {
-				$string .= '<a disabled title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_HOMEPAGE_NO_DELETE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE) . '"></i></a>';
+				$string .= '<a disabled title="' . Localization::getLocalizedString(Localization::LABEL_HOMEPAGE_NO_DELETE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			} else {
-				$string .= '<a href="' . Site::getBaseURL() . '?delete=' . $page->getID() . '" title="' . \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_DELETE_PAGE) . '"><i class="fa fa-' . \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE) . '"></i></a>';
+				$string .= '<a href="' . Site::getBaseURL() . '?delete=' . $page->getID() . '" title="' . Localization::getLocalizedString(Localization::LABEL_DELETE_PAGE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			}
 			$string .= '</td>' . PHP_EOL;
 			$string .= '</tr>' . PHP_EOL;

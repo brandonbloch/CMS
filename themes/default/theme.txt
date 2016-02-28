@@ -2,5 +2,6 @@
   "name": "Default",
   "description": "This is the theme selected by default.",
   "author": "Brandon Bloch",
-  "version": "1.0"
+  "version": "1.0",
+  "thumbnail": "thumbnail.png"
 }

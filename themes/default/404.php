@@ -1,10 +1,13 @@
 <?php
 
-CMS\Theme::includeHeader();
+use \CMS\Localization as Loc;
+use \CMS\Theme as Theme;
+
+Theme::includeHeader();
 
 ?>
 
-	<h1><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::LABEL_404); ?></h1>
+	<h1><?php echo Loc::getLocalizedString(\CMS\Localization::LABEL_404); ?></h1>
 
 	<p>The page you requested is not available.</p>
 
@@ -12,4 +15,4 @@ CMS\Theme::includeHeader();
 
 <?php
 
-CMS\Theme::includeFooter();
+Theme::includeFooter();

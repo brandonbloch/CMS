@@ -18,7 +18,7 @@ class FileDirectory implements \SeekableIterator, \Countable {
 			throw new \RuntimeException($directory . " is not a valid directory.");
 		}
 		// Read through the directory
-		if (substr($directory, -1) != \DIRECTORY_SEPARATOR) {
+		if (mb_substr($directory, -1) != \DIRECTORY_SEPARATOR) {
 			$directory = $directory . \DIRECTORY_SEPARATOR;
 		}
 		$this->directory = $directory;

@@ -246,23 +246,29 @@ class Theme extends SettingAbstract {
 
 		// build the elements (recursively)
 		foreach ($pageSet as $page) {
-			// include the list item tag, or skip ir for navs
-			$string .= '<li>';
 
-			// include the page
-			$string .= '<a href="' . $page->getURL() . '">' . $page->getShortname() . '</a>';
+			// only include pages (and their children) whose visibility is set to "public"
+			if ($page->getVisibility() == Page::VISIBILITY_PUBLIC) {
 
-			// include any sub-pages recursively, if they were desired
-			if (!$topLevelOnly) {
-				$children = $page->getChildren();
-				if (count($children) > 0) {
-					$string .= PHP_EOL;
-					$string .= self::getNavigationMenuRecursive(false, $children, false);
+				// include the list item tag, or skip ir for navs
+				$string .= '<li>';
+
+				// include the page
+				$string .= '<a href="' . $page->getURL() . '">' . $page->getShortname() . '</a>';
+
+				// include any sub-pages recursively, if they were desired
+				if (!$topLevelOnly) {
+					$children = $page->getChildren();
+					if (count($children) > 0) {
+						$string .= PHP_EOL;
+						$string .= self::getNavigationMenuRecursive(false, $children, false);
+					}
 				}
-			}
 
-			// include the closing list item tag if necessary
-			$string .= '</li>' . PHP_EOL;
+				// include the closing list item tag if necessary
+				$string .= '</li>' . PHP_EOL;
+
+			}
 		}
 
 		// closing tag of the structure
@@ -274,6 +280,24 @@ class Theme extends SettingAbstract {
 		}
 
 		return $string;
+	}
+
+	public static function getTemplateForPageType($identifier) {
+		try {
+			$pageType = Pages::getPageType($identifier);
+		} catch (\OutOfBoundsException $e) {
+			$pageType = Pages::getPageType("default");
+		}
+		// if the set page type has a template file in the theme directory, use that first
+		if (file_exists(self::getThemeDirectory() . "/" . $pageType["template"])) {
+			return $pageType["template"];
+		}
+		// if no type template exists but the theme has a page.php file, use that
+		if (file_exists(self::getThemeDirectory() . "/page.php")) {
+			return "page.php";
+		}
+		// finally, fall back to the theme's index.php file
+		return "index.php";
 	}
 
 }

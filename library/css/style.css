@@ -27,7 +27,8 @@ body.logged-in {
 .admin-bar-group-right {
   float: right; }
 
-.admin-bar a {
+.admin-bar a,
+.admin-bar button {
   display: inline-block;
   font-size: 20px;
   text-decoration: none;
@@ -35,15 +36,28 @@ body.logged-in {
   margin: 0 5px;
   width: 32px;
   height: 36px;
-  padding-top: 6px;
+  padding: 6px 0 0;
   text-align: center;
   cursor: pointer;
   position: relative;
   outline: none; }
-  .admin-bar a:hover, .admin-bar a:focus {
+  .admin-bar a:hover, .admin-bar a:focus,
+  .admin-bar button:hover,
+  .admin-bar button:focus {
     color: #eee; }
 
-.admin-bar a:hover::before {
+.admin-bar form {
+  display: inline-block;
+  margin: 0;
+  padding: 0; }
+
+.admin-bar button {
+  border: none;
+  background: transparent;
+  padding-top: 0; }
+
+.admin-bar a:hover::before,
+.admin-bar button:hover::before {
   content: attr(data-title);
   display: block;
   position: absolute;
@@ -56,7 +70,8 @@ body.logged-in {
   font-size: 16px;
   padding: 7px 10px 9px;
   pointer-events: none; }
-.admin-bar a:hover::after {
+.admin-bar a:hover::after,
+.admin-bar button:hover::after {
   content: "";
   display: block;
   position: absolute;
@@ -68,15 +83,19 @@ body.logged-in {
   border-bottom: solid 8px transparent;
   pointer-events: none; }
 
-.admin-bar-group-left a:hover::before {
+.admin-bar-group-left a:hover::before,
+.admin-bar-group-left button:hover::before {
   left: -4px; }
-.admin-bar-group-left a:hover::after {
+.admin-bar-group-left a:hover::after,
+.admin-bar-group-left button:hover::after {
   left: 50%;
   margin-left: -10px; }
 
-.admin-bar-group-right a:hover::before {
+.admin-bar-group-right a:hover::before,
+.admin-bar-group-right button:hover::before {
   right: -4px; }
-.admin-bar-group-right a:hover::after {
+.admin-bar-group-right a:hover::after,
+.admin-bar-group-right button:hover::after {
   right: 50%;
   margin-right: -10px; }
 
@@ -450,23 +469,36 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
       margin-left: 0; }
 
   .cms-page-type-list {
-    margin-left: -170px; } }
-.cms-page-type-list .page-type {
+    margin-left: -170px; }
+
+  .cms-themes-list {
+    padding-top: 10px; }
+    .cms-themes-list label {
+      position: static; } }
+.cms-page-type-list .page-type,
+.cms-page-type-list .theme-thumbnail,
+.cms-themes-list .page-type,
+.cms-themes-list .theme-thumbnail {
   display: inline-block;
   width: 180px;
   margin-bottom: 30px;
   margin-right: 30px;
   vertical-align: top; }
-.cms-page-type-list label {
+.cms-page-type-list label,
+.cms-themes-list label {
   position: static;
   cursor: pointer;
   display: block;
   width: 180px;
   margin: 0;
   padding: 0; }
-.cms-page-type-list input {
+.cms-page-type-list input,
+.cms-themes-list input {
   display: none; }
-.cms-page-type-list .page-type-preview {
+.cms-page-type-list .page-type-preview,
+.cms-page-type-list .theme-preview,
+.cms-themes-list .page-type-preview,
+.cms-themes-list .theme-preview {
   display: block;
   height: 200px;
   width: 150px;
@@ -476,14 +508,31 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center; }
-.cms-page-type-list input:checked + .page-type-preview {
+.cms-page-type-list input:checked + .page-type-preview,
+.cms-page-type-list input:checked + .theme-preview,
+.cms-themes-list input:checked + .page-type-preview,
+.cms-themes-list input:checked + .theme-preview {
   opacity: 0.8; }
-.cms-page-type-list .page-type-name {
+.cms-page-type-list .page-type-name,
+.cms-page-type-list .theme-name,
+.cms-themes-list .page-type-name,
+.cms-themes-list .theme-name {
   display: block;
   font-weight: bold;
   margin-bottom: 5px; }
-.cms-page-type-list .page-type-description {
+.cms-page-type-list .page-type-description,
+.cms-page-type-list .theme-description,
+.cms-themes-list .page-type-description,
+.cms-themes-list .theme-description {
   display: block; }
+
+.cms-themes-list .theme-thumbnail,
+.cms-themes-list label {
+  width: 225px; }
+
+.cms-themes-list .theme-preview {
+  width: 225px;
+  height: 150px; }
 
 #page_nav_display,
 #page_url_display {

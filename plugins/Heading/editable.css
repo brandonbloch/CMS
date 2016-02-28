@@ -1,0 +1,39 @@
+.heading-form-container {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 1em; }
+
+.heading-form-container.heading-level-1 {
+  font-size: 2em; }
+
+.heading-form-container.heading-level-2 {
+  font-size: 1.5em; }
+
+.heading-form-container.heading-level-3 {
+  font-size: 1.25em; }
+
+.heading-form-container.heading-level-4 {
+  font-size: 1em; }
+
+.heading-form-container.heading-level-5 {
+  font-size: 1em; }
+
+.heading-form-container.heading-level-6 {
+  font-size: 1em; }
+
+.heading-form-container select.cms-select {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  display: block;
+  width: 5rem;
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0.1em 0.3em; }
+
+.heading-form-container input.cms-input-invisible {
+  margin-left: 5rem;
+  padding-left: 0.5rem; }
+
+/*# sourceMappingURL=editable.css.map */

@@ -103,7 +103,7 @@ if (isset($_POST["settings_submit"])) {
 			<h2>Theme Settings</h2>
 
 			<label for="active_theme">Active Theme</label>
-			<select name="active_theme" id="active_theme">
+			<div class="cms-themes-list">
 				<?php $themes = preg_grep('/^([^.])/', scandir("./themes"));
 				$activeTheme = CMS\Theme::getActiveTheme();
 				foreach ($themes as $themeName) {
@@ -111,14 +111,22 @@ if (isset($_POST["settings_submit"])) {
 					if (file_exists("./themes/" . $themeName . '/index.php')) {
 						// if the theme's settings file cannot be read, it cannot be chosen
 						try {
-							$themeSettings = CMS\Theme::readThemeFile( $themeName ); ?>
-							<option value="<?php echo $themeName; ?>" <?php if ( $themeName == $activeTheme )
-								echo 'selected="selected"' ?>><?php echo $themeSettings["name"]; ?></option>
+							$themeSettings = CMS\Theme::readThemeFile($themeName); ?>
+							<div class="theme-thumbnail">
+								<label>
+									<input type="radio" name="active_theme" id="theme_option_<?php echo $themeName; ?>" value="<?php echo $themeName; ?>" <?php if ($activeTheme === $themeName) echo "checked"; ?>>
+									<span class="theme-preview" <?php if (isset($themeSettings["thumbnail"])) echo "style=\"background-image: url('" . CMS\Site::getBaseURL() . "/themes/" . $themeName . "/" . $themeSettings["thumbnail"] . "')\""; ?>></span>
+									<span class="theme-name"><?php echo $themeSettings["name"]; ?></span>
+									<?php if (isset($themeSettings["description"]) && trim($themeSettings["description"]) !== "") { ?>
+										<span class="theme-description"><?php echo $themeSettings["description"]; ?></span>
+									<?php } ?>
+								</label>
+							</div>
 						<?php } catch ( RuntimeException $e ) {
 						}
 					}
 				} ?>
-			</select>
+			</div>
 
 			<label for="">Toolbar Color</label>
 			<div class="radio-group">

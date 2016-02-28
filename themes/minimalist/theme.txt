@@ -2,5 +2,6 @@
   "name": "Minimalist",
   "description": "What's the bare minimum needed to get a theme working?",
   "author": "Brandon Bloch",
-  "version": "1.0"
+  "version": "1.0",
+  "thumbnail": "thumbnail.png"
 }

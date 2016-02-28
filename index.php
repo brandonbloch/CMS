@@ -3,15 +3,24 @@
 // get the configuration options
 require_once "configuration.php";
 
-// include the library/php directory for class auto-loading
+// include the library and plugins directories via class auto-loading
 spl_autoload_register(function($class) {
 	$class = str_replace("\\", "/", $class);
-	include_once "library/php/$class.php";
+	if (file_exists("library/php/$class.php")) {
+		include_once "library/php/$class.php";
+	} else {
+		$parts = explode("/", $class);
+		$class = end($parts);
+		if (file_exists("plugins/$class/$class.php")) {
+			include_once "plugins/$class/$class.php";
+		}
+	}
 });
 
 
 
-
+mb_language(\CMS\Localization::getLanguageCode());
+mb_regex_encoding("UTF-8");
 
 // Error handlers
 
@@ -36,43 +45,31 @@ if (isset($_GET["logout"])) {
 	die();
 }
 
-// page requested by slug
-if (isset($_GET["slug"])) {
-	// if on the homepage, redirect Site::getBaseURL (this will run again and reach the bottom)
-
-	// if the page slug is nonexistent, return a 404 response
-	try {
-		$currentPage = CMS\Page::withSlug($_GET["slug"]);
-	} catch (Exception $e) {
-		CMS\Site::set404Response();
+// page requested by slug or ID
+if (isset($_GET["slug"]) || isset($_GET["id"])) {
+	if (isset($_GET["slug"])) {
+		// if the page slug is nonexistent, send a 404 response
+		try {
+			$currentPage = CMS\Page::withSlug($_GET["slug"]);
+		} catch (Exception $e) {
+			CMS\Site::set404Response();
+		}
+	} else if (isset($_GET["id"])) {
+		// if the page ID is invalid or nonexistent, send a 404 response
+		try {
+			$currentPage = CMS\Page::withID($_GET["id"]);
+		} catch (Exception $e) {
+			CMS\Site::set404Response();
+		}
 	}
-
-	// if on the homepage, redirect Site::getBaseURL (this will run again and reach the bottom)
-	if ($currentPage->isHomepage()) {
-		CMS\Auth::redirect(CMS\Site::getBaseURL());
-	}
-
-	CMS\Pages::setCurrentPage($currentPage);
-	include CMS\Theme::getThemeDirectory() . "/index.php";
-	die();
-}
-
-// page requested by ID
-if (isset($_GET["id"])) {
-	// if the page ID is invalid, return a 404 response
-	try {
-		$currentPage = CMS\Page::withID($_GET["id"]);
-	} catch (Exception $e) {
-		CMS\Site::set404Response();
-	}
-
 	// if on the homepage, redirect Site::getBaseURL (this will run again and reach the bottom)
 	if ($currentPage->isHomepage()) {
-		CMS\Auth::redirect(Site::getBaseURL());
+		CMS\Browser::redirect(CMS\Site::getBaseURL());
 	}
-
+	// try loading the page type's template, or fallback to default
 	CMS\Pages::setCurrentPage($currentPage);
-	include CMS\Theme::getThemeDirectory() . "/index.php"; // TODO if the active theme has a page.php file, use that instead
+	$templateFile = CMS\Theme::getTemplateForPageType($currentPage->getPageTypeIdentifier());
+	include CMS\Theme::getThemeDirectory() . "/" . $templateFile;
 	die();
 }
 

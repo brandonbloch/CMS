@@ -13,10 +13,7 @@ class Heading extends CMS\Plugin {
 	private $headingLevel;
 	private $content;
 
-	public function __construct($level, $content) {
-		$this->setLevel($level);
-		$this->setContent($content);
-	}
+	protected function initialize() {}
 
 	public function getLevel() {
 		return $this->headingLevel;
@@ -48,7 +45,34 @@ class Heading extends CMS\Plugin {
 		}
 	}
 
-	public function __toString() {
+	protected function getValuesAsArray() {
+		$values = array(
+			"pluginVersion" => self::$pluginVersion,
+			"headingLevel" => $this->headingLevel,
+			"content" => $this->content,
+		);
+		return $values;
+	}
+
+	protected function setValuesWithArray(array $values) {
+		$this->setLevel($values["headingLevel"]);
+		$this->setContent($values["content"]);
+	}
+
+	public function getPublicVersion() {
 		return "<h" . $this->headingLevel . ">" . $this->content . "</h" . $this->headingLevel . ">";
+	}
+
+	public function getEditableVersion() {
+		$instanceNumber = $this->getPluginInstanceNumber();
+		$string = '<div class="heading-form-container heading-level-' . $this->headingLevel . '">' . PHP_EOL;
+		$string .= '<select name="heading-' . $instanceNumber . '-level" class="cms-select">' . PHP_EOL;
+		foreach (self::$headingLevels as $level) {
+			$string .= '<option value="' . $level . '"' . (($level == $this->headingLevel) ? ' selected' : '') . '>H' . $level . '</option>' . PHP_EOL;
+		}
+		$string .= '</select>' . PHP_EOL;
+		$string .= '<input type="text" name="heading-' . $instanceNumber . '-content" class="cms-input-invisible" value="' . $this->content . '">' . PHP_EOL;
+		$string .= '</div>' . PHP_EOL;
+		return $string;
 	}
 }

@@ -4,13 +4,14 @@ try {
 	$page = CMS\Page::withID($_GET["edit"]);
 	CMS\Pages::setCurrentPage($page);
 } catch (Exception $e) {
-	CMS\Auth::redirect(CMS\Site::getBaseURL() . "?pages");
+	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
 $data = array(
 	"parent_page" => $page->getParentID(),
 	"page_title" => $page->getTitle(),
 	"page_shortname" => $page->getShortname(),
+	"page_visibility" => $page->getVisibility(),
 );
 
 $errors = new CMS\Library\MessageCollector();
@@ -59,9 +60,19 @@ if (isset($_POST["page_settings_submit"])) {
 		}
 	}
 
+	if (isset($_POST["page_visibility"])) {
+		if (array_key_exists($_POST["page_visibility"], CMS\Page::getVisibilityDescriptions())) {
+			$data["page_visibility"] = (int) $_POST["page_visibility"];
+			$page->setVisibility($data["page_visibility"]);
+		} else {
+			$continue = false;
+			$errors->addMessage("Select a valid page visibility option.", CMS\Library\MessageCollector::WARNING);
+		}
+	}
+
 	if ($continue) {
 		$page->save();
-		CMS\Auth::redirect($page->getURL());
+		CMS\Browser::redirect($page->getURL());
 	}
 
 }
@@ -104,10 +115,21 @@ if (isset($_POST["page_settings_submit"])) {
 
 			<p id="shortname_explanation" style="display: <?php echo ($data["page_shortname"] == "") ? "none" : "block"; ?>;">The page will be displayed as <span id="page_nav_display"><?php echo $data["page_shortname"]; ?></span> in navigation menus and located at <span id="page_url_display"><?php echo CMS\Site::getBaseURL() . "/" . CMS\Library\Format::slug($data["page_shortname"]); ?></span></p>
 
+			<?php if ($page->isHomepage()) { ?>
+				<label>Visibility</label>
+				<p class="input-replacement">The homepage needs to be public.</p>
+			<?php } else { ?>
+				<label for="page_visibility">Visibility</label>
+				<select name="page_visibility" id="page_visibility">
+					<option value="<?php echo CMS\Page::VISIBILITY_PUBLIC; ?>" <?php if ($data["page_visibility"] == CMS\Page::VISIBILITY_PUBLIC) echo "selected"; ?>>Public</option>
+					<option value="<?php echo CMS\Page::VISIBILITY_PRIVATE; ?>" <?php if ($data["page_visibility"] == CMS\Page::VISIBILITY_PRIVATE) echo "selected"; ?>>Private</option>
+					<option value="<?php echo CMS\Page::VISIBILITY_SECRET; ?>" <?php if ($data["page_visibility"] == CMS\Page::VISIBILITY_SECRET) echo "selected"; ?>>Secret</option>
+				</select>
+
+				<p id="visibility_explanation"><?php echo CMS\Page::getVisibilityDescriptions()[$data["page_visibility"]]; ?></p>
+			<?php } ?>
+
 		</section>
-
-
-
 
 		<input type="hidden" name="page_settings_submit">
 		<button type="submit"><i class="fa fa-check-circle"></i> <?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::BUTTON_SAVE); ?></button>
@@ -117,6 +139,7 @@ if (isset($_POST["page_settings_submit"])) {
 </div>
 
 <?php include "library/js/slugpreview-js.php"; ?>
+<?php include "library/js/visibilitypreview-js.php"; ?>
 <?php CMS\Core::includeCore(); ?>
 </body>
 </html>

@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+.cms-plugin-container {
+	outline: solid 1px rgba(0, 0, 0, 0.15);
+
+	textarea {
+		resize: none;
+		margin: 0;
+	}
+
+	textarea.no-autosize {
+		resize: vertical;
+	}
+
+	select.cms-select {
+		background: #fff;
+		border: solid 1px #000;
+		border-radius: 0;
+		font-size: 1em;
+		-webkit-appearance: none;
+		background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='20px' width='25px'><text x='0' y='15' fill='#666' font-size='1rem'>&#9660;</text></svg>");
+		background-repeat: no-repeat;
+		background-position: right 60%;
+		margin: 0;
+		padding: 0;
+		outline: none;
+	}
+
+	input.cms-input-invisible {
+		display: block;
+		background: transparent;
+		border: none;
+		font: inherit;
+		font-weight: bold;
+		width: 100%;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+		outline: none;
+	}
+
+	textarea.cms-textarea-invisible {
+		display: block;
+		font: inherit;
+		width: 100%;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		margin: 0;
+		border: none;
+		background-color: transparent;
+		outline: none;
+	}
+
+}

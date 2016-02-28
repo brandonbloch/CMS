@@ -54,7 +54,8 @@ body.logged-in {
 	float: right;
 }
 
-.admin-bar a {
+.admin-bar a,
+.admin-bar button {
 	display: inline-block;
 	font-size: 20px;
 	text-decoration: none;
@@ -62,7 +63,7 @@ body.logged-in {
 	margin: 0 5px;
 	width: 32px;
 	height: 36px;
-	padding-top: 6px;
+	padding: 6px 0 0;
 	text-align: center;
 	cursor: pointer;
 	position: relative;
@@ -73,7 +74,20 @@ body.logged-in {
 	}
 }
 
-.admin-bar a:hover {
+.admin-bar form {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+}
+
+.admin-bar button {
+	border: none;
+	background: transparent;
+	padding-top: 0;
+}
+
+.admin-bar a:hover,
+.admin-bar button:hover {
 	&::before {
 		content: attr(data-title);;
 		display: block;
@@ -102,7 +116,8 @@ body.logged-in {
 	}
 }
 
-.admin-bar-group-left a:hover {
+.admin-bar-group-left a:hover,
+.admin-bar-group-left button:hover {
 	&::before {
 		left: -4px;
 	}
@@ -112,7 +127,8 @@ body.logged-in {
 	}
 }
 
-.admin-bar-group-right a:hover {
+.admin-bar-group-right a:hover,
+.admin-bar-group-right button:hover {
 	&::before {
 		right: -4px;
 	}
@@ -424,12 +440,21 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 		margin-left: -170px;
 	}
 
+	.cms-themes-list {
+		padding-top: 10px;
+		label {
+			position: static;
+		}
+	}
+
 }
 
 
-.cms-page-type-list {
+.cms-page-type-list,
+.cms-themes-list {
 
-	.page-type {
+	.page-type,
+	.theme-thumbnail {
 		display: inline-block;
 		width: 180px;
 		margin-bottom: 30px;
@@ -450,7 +475,8 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 		display: none;
 	}
 
-	.page-type-preview {
+	.page-type-preview,
+	.theme-preview {
 		display: block;
 		height: 200px;
 		width: 150px;
@@ -462,20 +488,33 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 		background-position: center center;
 	}
 
-	input:checked + .page-type-preview {
+	input:checked + .page-type-preview,
+	input:checked + .theme-preview {
 		opacity: 0.8;
 	}
 
-	.page-type-name {
+	.page-type-name,
+	.theme-name {
 		display: block;
 		font-weight: bold;
 		margin-bottom: 5px;
 	}
 
-	.page-type-description {
+	.page-type-description,
+	.theme-description {
 		display: block;
 	}
 
+}
+
+.cms-themes-list .theme-thumbnail,
+.cms-themes-list label {
+	width: 225px;
+}
+
+.cms-themes-list .theme-preview {
+	width: 225px;
+	height: 150px;
 }
 
 #page_nav_display,
