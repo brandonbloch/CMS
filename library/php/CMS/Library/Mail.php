@@ -1,5 +1,7 @@
 <?php
 
+// TODO: start using PHP 7!
+
 namespace CMS\Library;
 
 class Mail {

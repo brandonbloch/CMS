@@ -20,38 +20,8 @@ class Validate {
 	private function __construct() {}
 	private function __clone() {}
 
-	private static function initialize() {
-		if (self::$initialized) {
-			return;
-		}
-		self::$initialized = true;
-	}
-
 	/**
-	 * Check whether a given input is either numeric or could be converted to a numeric type.
-	 *
-	 * @param string $value             The string to validate
-	 *
-	 * @return bool                     True if the string is numeric, and false otherwise
-	 */
-	public static function number($value) {
-		self::initialize();
-		if (!isset($value)) {
-			return false;
-		}
-		return is_numeric($value);
-	}
-
-	public static function int($value) {
-		self::initialize();
-		if (!isset($value)) {
-			return false;
-		}
-		return (is_int($value) || (is_string($value) && ctype_digit($value)));
-	}
-
-	/**
-	 * Check the validity of a given string as plain text.
+	 * Validate a string as plain text.
 	 * Allows all characters except those used in HTML (<tag> </tag>) and PHP (<?php ?>)
 	 *
 	 * @param string $string            The string to validate
@@ -59,12 +29,8 @@ class Validate {
 	 *
 	 * @return bool                     True if the string is valid plain text, and false otherwise
 	 */
-	public static function plainText($string, $allowEmpty = false) {
-		self::initialize();
+	public static function plainText(string $string, bool $allowEmpty = false): bool {
 		if (!isset($string) || is_null($string)) {
-			return false;
-		}
-		if (!is_string($string)) {
 			return false;
 		}
 		if (trim($string) === "") {
@@ -74,19 +40,15 @@ class Validate {
 	}
 
 	/**
-	 * Check the validity of a given string as HTML.
+	 * Validate a string as HTML.
 	 *
 	 * @param string $string            The string to validate
 	 * @param bool $allowEmpty          Whether to allow an empty string as valid input
 	 *
 	 * @return bool                     True if the string is valid HTML, and false otherwise
 	 */
-	public static function HTML($string, $allowEmpty = false) {
-		self::initialize();
+	public static function HTML(string $string, bool $allowEmpty = false): bool {
 		if (!isset($string) || is_null($string)) {
-			return false;
-		}
-		if (!is_string($string)) {
 			return false;
 		}
 		if (trim($string) === "") {
@@ -98,12 +60,15 @@ class Validate {
 		return true;
 	}
 
-	public static function slug($slug) {
-		self::initialize();
+	/**
+	 * Validate a string as a slug. 
+	 * 
+	 * @param string $slug          The slug to validate
+	 *
+	 * @return bool                 True if the string is a valid slug, and false otherwise
+	 */
+	public static function slug(string $slug): bool {
 		if (!isset($slug) || is_null($slug)) {
-			return false;
-		}
-		if (!is_string($slug)) {
 			return false;
 		}
 		if (trim($slug) === "") {
@@ -120,12 +85,8 @@ class Validate {
 	 *
 	 * @return bool                     True if the string is a valid name, and false otherwise
 	 */
-	public static function name($name) {
-		self::initialize();
+	public static function name(string $name): bool {
 		if (empty($name) || is_null($name)) {
-			return false;
-		}
-		if (!is_string($name)) {
 			return false;
 		}
 		if (trim($name) === "") {
@@ -134,6 +95,7 @@ class Validate {
 		if ($name !== strip_tags($name)) {
 			return false;
 		}
+		// TODO allow more inclusive international names
 		return (preg_match("/^[[:alpha:] -]+$/", $name));
 	}
 
@@ -144,12 +106,8 @@ class Validate {
 	 *
 	 * @return bool                     True if the string is a valid email address, and false otherwise
 	 */
-	public static function email($email) {
-		self::initialize();
+	public static function email(string $email): bool {
 		if (empty($email) || is_null($email)) {
-			return false;
-		}
-		if (!is_string($email)) {
 			return false;
 		}
 		if (trim($email) === "") {
@@ -168,12 +126,8 @@ class Validate {
 	 *
 	 * @return bool                     True if the string is a valid URL, and false otherwise
 	 */
-	public static function url($url) {
-		self::initialize();
+	public static function url(string $url): bool {
 		if (empty($url) || is_null($url)) {
-			return false;
-		}
-		if (!is_string($url)) {
 			return false;
 		}
 		if (trim($url) === "") {
@@ -186,31 +140,6 @@ class Validate {
 	}
 
 	/**
-	 * Check the validity of a given string as a phone number
-	 *
-	 * @param string $digits            The string to validate
-	 *
-	 * @return bool                     True if the string is a valid phone number, and false otherwise
-	 */
-	public static function phone($digits) {
-		self::initialize();
-		if (empty($digits) || is_null($digits)) {
-			return false;
-		}
-		if (!is_string($digits)) {
-			return false;
-		}
-		if (trim($digits) === "") {
-			return false;
-		}
-		if ($digits !== strip_tags($digits)) {
-			return false;
-		}
-		$digits = preg_replace("/[^0-9\\+]/i", "", $digits);
-		return (preg_match("/^\\+?[0-9]{10,11}$/", $digits) === 1);
-	}
-
-	/**
 	 * Check the validity of a given string as a username.
 	 * The minimum length is specified in constants.php as USERNAME_MIN_LENGTH.
 	 *
@@ -218,12 +147,8 @@ class Validate {
 	 *
 	 * @return bool                     True if the string is a valid username, and false otherwise
 	 */
-	public static function username($username) {
-		self::initialize();
+	public static function username(string $username): bool {
 		if (empty($username) || is_null($username)) {
-			return false;
-		}
-		if (!is_string($username)) {
 			return false;
 		}
 		if (trim($username) === "") {
@@ -239,61 +164,20 @@ class Validate {
 	}
 
 	/**
-	 * Check if the given value is a DateTime object, or an otherwise-valid date/time string
-	 *
-	 * @param mixed $date               The input to validate
-	 *
-	 * @return bool                     True if the input is a DateTime object or a valid date/time string, and false otherwise
-	 */
-	public static function date($date) {
-		self::initialize();
-		if ($date === false) {
-			return false;
-		}
-		if ($date instanceof \DateTime) {
-			return true;
-		}
-		if (is_null($date) || !isset($date)) {
-			return false;
-		}
-		if (trim($date) == "") {
-			return false;
-		}
-		if ($date !== strip_tags($date)) {
-			return false;
-		}
-
-		$formats = array("d.m.Y", "d/m/Y", "Ymd", Format::DATE_FORMAT, Format::BIRTHDAY_FORMAT, Format::MYSQL_DATE_FORMAT, Format::MYSQL_TIMESTAMP_FORMAT);
-
-		foreach ($formats as $format) {
-			$output = \DateTime::createFromFormat($format, $date);
-			if ($output !== false) {
-				return true;
-			}
-		}
-		return false;
-
-	}
-
-	/**
 	 * Check the validity of a given string as a password
 	 *
 	 * @param string $password          The string to validate
 	 *
 	 * @return bool                     True if the string is a valid password, and false otherwise
 	 */
-	public static function password($password) {
-		self::initialize();
+	public static function password(string $password): bool {
 		if (empty($password) || is_null($password)) {
-			return false;
-		}
-		if (!is_string($password)) {
 			return false;
 		}
 		if (trim($password) === "") {
 			return false;
 		}
-		if (strip_tags($password) !== $password) {
+		if ($password !== strip_tags($password)) {
 			return false;
 		}
 		if (mb_strlen($password) < self::PASSWORD_MIN_LENGTH) {
@@ -302,8 +186,14 @@ class Validate {
 		return true;
 	}
 
-	// Ensures an IP address is both a valid IP and does not fall within a private network range.
-	public static function IP($ip) {
+	/**
+	 * Ensures an IP address is a valid IP, and also does not fall within a private network range.
+	 *
+	 * @param string $ip        The IP address to check
+	 *
+	 * @return bool             True if the IP is valid and not private
+	 */
+	public static function IP(string $ip): bool {
 		if (filter_var($ip, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4 | \FILTER_FLAG_NO_PRIV_RANGE | \FILTER_FLAG_NO_RES_RANGE) === false) {
 			return false;
 		}

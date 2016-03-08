@@ -8,36 +8,27 @@ class Heading extends CMS\Plugin {
 	protected static $pluginName = "Heading";
 	protected static $pluginVersion = "1.0.0";
 
-	private static $headingLevels = array(1, 2, 3, 4, 5, 6);
+	private static $headingLevels = [1, 2, 3, 4, 5, 6];
 
 	private $headingLevel;
 	private $content;
 
-	protected function initialize() {}
-
-	public function getLevel() {
+	public function getLevel(): int {
 		return $this->headingLevel;
 	}
 
-	public function setLevel($level) {
-		if (!CMS\Library\Validate::int($level)) {
-			if (is_string($level) && ctype_digit($level)) {
-				$level = (int) $level;
-			} else {
-				throw new \InvalidArgumentException("Expected int for heading level, got " . gettype($level) . " instead.");
-			}
-		}
+	public function setLevel(int $level) {
 		if ($level < 1 || $level > 6) {
 			throw new \InvalidArgumentException("Heading level must be a number from 1 to 6.");
 		}
 		$this->headingLevel = $level;
 	}
 
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
-	public function setContent($content) {
+	public function setContent(string $content) {
 		if (CMS\Library\Validate::plainText($content, true)) {
 			$this->content = $content;
 		} else {
@@ -45,13 +36,12 @@ class Heading extends CMS\Plugin {
 		}
 	}
 
-	protected function getValuesAsArray() {
-		$values = array(
+	protected function getValuesAsArray(): array {
+		return [
 			"pluginVersion" => self::$pluginVersion,
 			"headingLevel" => $this->headingLevel,
 			"content" => $this->content,
-		);
-		return $values;
+		];
 	}
 
 	protected function setValuesWithArray(array $values) {
@@ -59,11 +49,11 @@ class Heading extends CMS\Plugin {
 		$this->setContent($values["content"]);
 	}
 
-	public function getPublicVersion() {
+	public function getPublicVersion(): string {
 		return "<h" . $this->headingLevel . ">" . $this->content . "</h" . $this->headingLevel . ">";
 	}
 
-	public function getEditableVersion() {
+	public function getEditableVersion(): string {
 		$instanceNumber = $this->getPluginInstanceNumber();
 		$string = '<div class="heading-form-container heading-level-' . $this->headingLevel . '">' . PHP_EOL;
 		$string .= '<select name="heading-' . $instanceNumber . '-level" class="cms-select">' . PHP_EOL;

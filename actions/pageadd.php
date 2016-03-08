@@ -1,15 +1,14 @@
 <?php
 
-$data = array(
+$data = [
 	"parent_page" => 0,
 	"page_title" => "",
 	"page_shortname" => "",
 	"page_visibility" => 0,
-);
+	"page_type" => CMS\Pages::PAGE_TYPE_DEFAULT,
+];
 
-$pageType = 0;      // TODO do something with this
-
-$errors = new CMS\Library\MessageCollector();
+$errors = new CMS\Library\MessageList();
 
 if (isset($_POST["page_add_submit"])) {
 
@@ -20,24 +19,24 @@ if (isset($_POST["page_add_submit"])) {
 	$data["page_title"] = trim($_POST["page_title"]);
 	if ( ! $data["page_title"] ) {
 		$continue = false;
-		$errors->addMessage("Give the page a title.", CMS\Library\MessageCollector::WARNING);
+		$errors->addMessage("Give the page a title.", CMS\Library\MessageList::WARNING);
 	} else if (!CMS\Library\Validate::plainText($data["page_title"])) {
 		$continue = false;
-		$errors->addMessage("Enter a valid page title.", CMS\Library\MessageCollector::WARNING);
+		$errors->addMessage("Enter a valid page title.", CMS\Library\MessageList::WARNING);
 	}
 
 	$data["page_shortname"] = trim($_POST["page_shortname"]);
 	if (!$data["page_shortname"]) {
 		$continue = false;
-		$errors->addMessage("Give the page a shortname.", CMS\Library\MessageCollector::WARNING);
+		$errors->addMessage("Give the page a shortname.", CMS\Library\MessageList::WARNING);
 	} else if (!CMS\Library\Validate::plainText($data["page_shortname"])) {
 		$continue = false;
-		$errors->addMessage("Enter a valid shortname.", CMS\Library\MessageCollector::WARNING);
+		$errors->addMessage("Enter a valid shortname.", CMS\Library\MessageList::WARNING);
 	} else {
 		$slug = CMS\Library\Format::slug($data["page_shortname"]);
 		if (CMS\Pages::slugExists($slug)) {
 			$continue = false;
-			$errors->addMessage("A page with that shortname already exists.", CMS\Library\MessageCollector::WARNING);
+			$errors->addMessage("A page with that shortname already exists.", CMS\Library\MessageList::WARNING);
 		}
 	}
 
@@ -46,8 +45,15 @@ if (isset($_POST["page_add_submit"])) {
 			$data["page_visibility"] = (int) $_POST["page_visibility"];
 		} else {
 			$continue = false;
-			$errors->addMessage("Select a valid page visibility option.", CMS\Library\MessageCollector::WARNING);
+			$errors->addMessage("Select a valid page visibility option.", CMS\Library\MessageList::WARNING);
 		}
+	}
+
+	if (CMS\Pages::pageTypeExists($_POST["page_type"])) {
+		$data["page_type"] = $_POST["page_type"];
+	} else {
+		$continue = false;
+		$errors->addMessage("Select an existing page type.", CMS\Library\MessageList::WARNING);
 	}
 
 	if ($continue) {
@@ -111,10 +117,10 @@ if (isset($_POST["page_add_submit"])) {
 
 			<div class="radio-group cms-page-type-list">
 
-				<?php foreach (CMS\Pages::getPageTypes() as $id => $type) { ?>
+				<?php foreach (CMS\Pages::getPageTypes() as $identifier => $type) { ?>
 					<div class="page-type">
 						<label>
-							<input type="radio" name="page_type" id="page_type_<?php echo $id; ?>" value="<?php echo $id; ?>" <?php if ($pageType === $id) echo "checked"; ?>>
+							<input type="radio" name="page_type" id="page_type_<?php echo $identifier; ?>" value="<?php echo $identifier; ?>" <?php if ($data["page_type"] == $identifier) echo "checked"; ?>>
 							<span class="page-type-preview" <?php if (isset($type["icon"])) echo "style=\"background-image: url('" . $type["icon"] . "')\""; ?>></span>
 							<span class="page-type-name"><?php echo $type["name"]; ?></span>
 							<?php if (isset($type["description"]) && trim($type["description"]) !== "") { ?>

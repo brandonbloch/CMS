@@ -3,23 +3,28 @@
 namespace CMS;
 
 class Pages {
+	
+	const PAGE_TYPE_DEFAULT = "default";
 
 	private static $currentPage;
-	private static $pageTypes = array(
-		0 => array(
-			"identifier" => "default",
-			"name" => "Single Zone",
-			"description" => "A blank page with one large editable zone.",
-			"zones" => 1,
-			"template" => "page.php",
-			"icon" => "page-default.svg",
-		)
-	);
+	private static $pageTypes = [
+		self::PAGE_TYPE_DEFAULT => [
+			"identifier"    => self::PAGE_TYPE_DEFAULT,
+			"name"          => "Single Zone",
+			"description"   => "A blank page with one large editable zone.",
+			"zones"         => 1,
+			"template"      => "page.php",
+			"icon"          => "page-default.svg",
+		]
+	];
+
+	private function __construct() {}
+	private function __clone() {}
 
 	/**
 	 * @return Page
 	 */
-	public static function getCurrentPage() {
+	public static function getCurrentPage(): Page {
 		return self::$currentPage;
 	}
 
@@ -33,34 +38,35 @@ class Pages {
 		self::$currentPage = $currentPage;
 	}
 
-	public static function registerPageType($identifier, $name, array $options = array()) {
-		$defaults = array(
+	public static function registerPageType(string $identifier, string $name, array $options = []): int {
+		$defaults = [
 			"icon" => NULL,
 			"description" => NULL,
 			"zones" => 1,
 			"template" => "page.php",
-		);
+		];
 		$options = array_merge($defaults, $options);
 
-		$type = array();
+		$type = [];
 		if (!Library\Validate::plainText($identifier)) {
 			throw new \InvalidArgumentException("Invalid page type identifier supplied to Pages::registerPageType.");
 		}
-		foreach (self::$pageTypes as $existingType) {
-			if ($existingType["identifier"] == $identifier) {
-				throw new \InvalidArgumentException("Page type identifier '" . $identifier . "' already exists.");
-			}
+		if (self::pageTypeExists($identifier)) {
+			throw new \InvalidArgumentException("Page type identifier '" . $identifier . "' already exists.");
 		}
 		$type["identifier"] = $identifier;
 		if (!Library\Validate::plainText($name)) {
 			throw new \InvalidArgumentException("Invalid page type name supplied to Pages::registerPageType.");
 		}
 		$type["name"] = $name;
-		if (!Library\Validate::int($options["zones"])) {
+		if (is_int($options["zones"]) || (is_string($options["zones"]) && ctype_digit($options["zones"]))) {
+			$type["zones"] = (int) $options["zones"];
+		} else {
 			throw new \InvalidArgumentException("Invalid number of editable zones supplied to Pages::registerPageType.");
 		}
+		$type["template"] = $options["template"];
 		if (!file_exists(Theme::getThemeDirectory() . "/" . $options["template"])) {
-//			throw new InvalidArgumentException("The specified page template file does not exist.");
+			throw new \InvalidArgumentException("The specified page template file does not exist.");
 		}
 		if ($options["icon"] !== NULL) {
 			$type["icon"] = Theme::getThemeDirectoryURL() . "/" . $options["icon"];
@@ -69,14 +75,14 @@ class Pages {
 			$type["description"] = $options["description"];
 		}
 		$numTypes = count(self::$pageTypes);
-		self::$pageTypes[] = $type;
+		self::$pageTypes[$identifier] = $type;
 		return ($numTypes);
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function getPageTypes() {
+	public static function getPageTypes(): array {
 		return self::$pageTypes;
 	}
 
@@ -85,11 +91,9 @@ class Pages {
 	 *
 	 * @return bool
 	 */
-	public static function pageTypeExists($identifier) {
-		foreach (self::$pageTypes as $pageType) {
-			if ($pageType["identifier"] == $identifier) {
-				return true;
-			}
+	public static function pageTypeExists(string $identifier): bool {
+		if (array_key_exists($identifier, self::$pageTypes)) {
+			return true;
 		}
 		return false;
 	}
@@ -99,11 +103,9 @@ class Pages {
 	 *
 	 * @return array
 	 */
-	public static function getPageType($identifier) {
-		foreach (self::$pageTypes as $pageType) {
-			if ($pageType["identifier"] == $identifier) {
-				return $pageType;
-			}
+	public static function getPageType(string $identifier): array {
+		if (self::pageTypeExists($identifier)) {
+			return self::$pageTypes[$identifier];
 		}
 		throw new \OutOfBoundsException("Nonexistent page type identifier supplied to Pages::getPageType.");
 	}
@@ -114,12 +116,12 @@ class Pages {
 	 *
 	 * @return string
 	 */
-	public static function getPageHierarchySelectList($selectedPageID, $ignoreRoot = false) {
+	public static function getPageHierarchySelectList(int $selectedPageID, int $ignoreRoot = 0): string {
 		return self::getPageHierarchySelectListRecursive($selectedPageID, Page::getTopLevelWithoutContent(), $ignoreRoot);
 	}
 
-	private static function getPageHierarchySelectListRecursive($selectedPageID, array $pageSet, $ignoreRoot = false, $prefix = "") {
-		if ($pageSet == array()) {
+	private static function getPageHierarchySelectListRecursive(int $selectedPageID, array $pageSet, $ignoreRoot = false, string $prefix = ""): string {
+		if (empty($pageSet)) {
 			return "";
 		}
 		$string = "";
@@ -157,12 +159,12 @@ class Pages {
 	/**
 	 * @return string
 	 */
-	public static function getPageHierarchyTableList() {
+	public static function getPageHierarchyTableList(): string {
 		return self::getPageHierarchyTableListRecursive(Page::getTopLevelWithoutContent());
 	}
 
-	private static function getPageHierarchyTableListRecursive(array $pageSet, $prefix = "") {
-		if ($pageSet == array()) {
+	private static function getPageHierarchyTableListRecursive(array $pageSet, string $prefix = ""): string {
+		if (empty($pageSet)) {
 			return "";
 		}
 		$string = "";
@@ -206,7 +208,7 @@ class Pages {
 	 *
 	 * @return bool
 	 */
-	public static function slugExists($slug) {
+	public static function slugExists(string $slug): bool {
 		try {
 			$pdo  = DB::getHandle();
 			$stmt = $pdo->prepare("SELECT COUNT(*) FROM pages WHERE slug = :slug");

@@ -28,7 +28,7 @@ class DB {
 	 *
 	 * @return \PDO
 	 */
-	public static function getHandle($database = \DB_NAME) {
+	public static function getHandle(string $database = DB_NAME): \PDO {
 		if ($database !== self::$database) {
 			self::close();
 			self::$database = $database;
@@ -37,7 +37,7 @@ class DB {
 		return self::$connection;
 	}
 
-	private static function open($database) {
+	private static function open(string $database) {
 		try {
 			self::$connection = new \PDO("mysql:host=" . \DB_HOST . ";dbname=" . $database . ";charset=utf8", \DB_USER, \DB_PASS);
 			self::$connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);

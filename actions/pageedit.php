@@ -7,13 +7,14 @@ try {
 	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
-$data = array(
+$data = [
 	"parent_page" => $page->getParentID(),
 	"page_title" => $page->getTitle(),
 	"page_shortname" => $page->getShortname(),
-);
+];
 
 if (isset($_POST["page_edit_submit"])) {
 }
 
-include CMS\Theme::getThemeDirectory() . "/index.php";
+$templateFile = CMS\Theme::getTemplateForPageType($page->getPageTypeIdentifier());
+include CMS\Theme::getThemeDirectory() . "/" . $templateFile;

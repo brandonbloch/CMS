@@ -1,5 +1,7 @@
 <?php
 
+// TODO: start using PHP 7!
+
 namespace CMS;
 
 /**
@@ -12,10 +14,7 @@ namespace CMS;
  */
 class Auth {
 
-	/**
-	 * The algorithmic cost value used by the hash() function
-	 */
-	const COST_VALUE = 12;
+	const HASH_COST = 12;
 	
 	private static $initialized = false;
 
@@ -24,17 +23,15 @@ class Auth {
 
 	/**
 	 * Start the session
-	 *
-	 * Used to ensure the proper session headers are sent before any output occurs.
 	 */
 	public static function initialize() {
-		if (self::$initialized) {
-			return; // only needs to run once per page request
+		if (!self::$initialized) {  // only needs to run once per page request
+			if (session_status() == PHP_SESSION_NONE) {
+				// start the session if it hasn't been started yet
+				session_start();
+			}
+			self::$initialized = true;
 		}
-		if (session_status() == PHP_SESSION_NONE) { // start the session if it isn't yet
-			session_start();
-		}
-		self::$initialized = true;
 	}
 
 	// initialize session variables
@@ -43,7 +40,7 @@ class Auth {
 		self::sessionRegenerate();
 		if (!isset($_SESSION['active'])) {
 			$_SESSION['active'] = 1;
-			$_SESSION['ip_address'] = Browser::trimIP(self::get_ip_address());
+			$_SESSION['ip_address'] = Browser::trimIP(Browser::getIP());
 			$_SESSION['user_agent'] = (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : '';
 			$_SESSION['logged_in'] = 0;
 			$_SESSION['last_activity'] = time();
@@ -75,7 +72,6 @@ class Auth {
 	// log them in, disable the idle flag, and update timestamps
 	private static function sessionResume() {
 		self::initialize();
-//		self::sessionRegenerate();
 		$_SESSION['logged_in'] = 1;
 		$_SESSION['idle'] = 0;
 		$_SESSION['last_activity'] = time();
@@ -85,7 +81,7 @@ class Auth {
 	/**
 	 * Authenticate the current session
 	 *
-	 * @return bool     True if the session has been authenticated, and false if not
+	 * @return bool     True if the current user is currently authenticated, and false if not
 	 */
 	public static function authenticate() {
 		self::initialize();
@@ -94,14 +90,14 @@ class Auth {
 		if ($_SESSION['logged_in'] == 1) { // if logged in, ensure session validity
 			
 			// if the maximum idle time is exceeded, halt the session
-			if (\SESSION_IDLE_TIME >= 0 && time() > $_SESSION['last_activity'] + \SESSION_IDLE_TIME) {
+			if (SESSION_IDLE_TIME >= 0 && time() > $_SESSION['last_activity'] + SESSION_IDLE_TIME) {
 				self::sessionHalt();
 				return false;
 			} else {
 				// update the time of activity to now
 				$_SESSION['last_activity'] = time();
 				// if the IP address has changed, destroy the session
-				if ($_SESSION['ip_address'] !== self::trimIP(self::get_ip_address()) ) {
+				if ($_SESSION['ip_address'] !== Browser::trimIP(Browser::getIP()) ) {
 					self::sessionEnd();
 					return false;
 				} else {
@@ -130,10 +126,10 @@ class Auth {
 	 */
 	public static function login($username, $password) {
 		self::initialize();
-		if (!Validate::username($username)) {
+		if (!Library\Validate::username($username)) {
 			throw new \InvalidArgumentException("Invalid username supplied as argument.");
 		}
-		if (!Validate::password($password)) {
+		if (!Library\Validate::password($password)) {
 			throw new \InvalidArgumentException("Invalid password supplied as argument.");
 		}
 
@@ -170,7 +166,7 @@ class Auth {
 	 */
 	public static function isIdle() {
 		self::initialize();
-		if (\SESSION_IDLE_TIME <= 0) {
+		if (SESSION_IDLE_TIME <= 0) {
 			return false;
 		}
 		if (isset($_SESSION['idle']) && $_SESSION['idle'] == 1) {
@@ -180,28 +176,28 @@ class Auth {
 	}
 
 	/**
-	 * Get a text message to display regarding the user's idle status
+	 * Get a message string to display regarding the user's idle status
 	 *
 	 * @return string       The idle message
 	 */
 	public static function idleMessage() {
 		if (Auth::isIdle()) {
-			if (\SESSION_IDLE_TIME == 1) {
+			if (SESSION_IDLE_TIME == 1) {
 				return "You have been logged out due to 1 second of inactivity.";
 			}
-			if (\SESSION_IDLE_TIME < 60) {
-				return "You have been logged out due to " . \SESSION_IDLE_TIME . " seconds of inactivity.";
+			if (SESSION_IDLE_TIME < 60) {
+				return "You have been logged out due to " . SESSION_IDLE_TIME . " seconds of inactivity.";
 			}
-			if (\SESSION_IDLE_TIME < 120) {
+			if (SESSION_IDLE_TIME < 120) {
 				return "You have been logged out due to 1 minute of inactivity.";
 			}
-			if (\SESSION_IDLE_TIME < 3600) {
-				return "You have been logged out due to " . floor(\SESSION_IDLE_TIME / 60) . " minutes of inactivity.";
+			if (SESSION_IDLE_TIME < 3600) {
+				return "You have been logged out due to " . floor(SESSION_IDLE_TIME / 60) . " minutes of inactivity.";
 			}
-			if (\SESSION_IDLE_TIME < 7200) {
+			if (SESSION_IDLE_TIME < 7200) {
 				return "You have been logged out due to 1 hour of inactivity.";
 			}
-			return "You have been logged out due to " . floor(\SESSION_IDLE_TIME / 3600) . " hours of inactivity.";
+			return "You have been logged out due to " . floor(SESSION_IDLE_TIME / 3600) . " hours of inactivity.";
 		} else {
 			return "";
 		}
@@ -210,10 +206,10 @@ class Auth {
 	/**
 	 * Check if the current user is logged in
 	 *
-	 * @return bool         True if the session exists and the user is logged in, and false if not
+	 * @return bool         True if the user is logged in (even if idle), false if not
 	 */
 	public static function isLoggedIn() {
-		if (session_status() == \PHP_SESSION_NONE) {
+		if (session_status() == PHP_SESSION_NONE) {
 			return false;
 		}
 		self::initialize();
@@ -240,11 +236,11 @@ class Auth {
 	 */
 	public static function getNewResetKey() {
 		self::initialize();
-		$characters = "abcdefghijklmnopqrstuvwxyz0123456789";
-		$numChars = strlen($characters);
+		$characters = "bcdfghjkmnpqrstvwxyz0123456789";
+		$lastCharacter = strlen($characters) - 1;
 		$key = "";
 		for ($i = 0; $i < 23; $i++) {
-			$key .= $characters[mt_rand(0, $numChars - 1)];
+			$key .= $characters[random_int(0, $lastCharacter)];
 		}
 		return $key;
 	}
@@ -259,8 +255,8 @@ class Auth {
 	 */
 	public static function hash($password) {
 		self::initialize();
-		$options = array("cost" => self::COST_VALUE);
-		return password_hash($password, \PASSWORD_DEFAULT, $options);
+		$options = ["cost" => self::HASH_COST];
+		return password_hash($password, PASSWORD_DEFAULT, $options);
 	}
 
 	/**

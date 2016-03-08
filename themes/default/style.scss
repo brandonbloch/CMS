@@ -71,3 +71,39 @@ footer {
 	margin-top: 4rem;
 	text-align: center;
 }
+
+.sidebar {
+	background-color: #000;
+	color: #fff;
+	display: block;
+	min-height: 100px;
+	padding: 1em;
+}
+
+.sidebar .cms-zone {
+	outline-color: rgba(255, 255, 255, 0.35);
+}
+
+@media all and (min-width: 768px) {
+
+	.page {
+		display: flex;
+	}
+
+	.main {
+		flex-grow: 1;
+	}
+
+	.sidebar {
+		flex-shrink: 0;
+	}
+
+	.sidebar-right {
+		margin-left: 1em;
+	}
+
+	.sidebar-left {
+		margin-right: 1em;
+	}
+
+}

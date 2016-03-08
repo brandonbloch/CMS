@@ -10,33 +10,39 @@ class Browser {
 	/**
 	 * Get the current browsing client's user agent string
 	 *
-	 * @return string|bool          The User Agent string if set, or false otherwise
+	 * @return string       The User Agent string if set, or an empty string otherwise
 	 */
-	public static function getUserAgentString() {
-		return isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : false;
+	public static function getUserAgentString(): string {
+		return isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : "";
 	}
 
 	/**
 	 * Get the current browsing client's IP address
 	 *
-	 * @return string|bool          The IP address if set, or false otherwise
+	 * @return string       The IP address if set, or an empty string otherwise
 	 */
-	public static function getIP() {
-		$ip_keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
+	public static function getIP(): string {
+		$ip_keys = [
+			"HTTP_CLIENT_IP",
+			"HTTP_X_FORWARDED_FOR",
+			"HTTP_X_FORWARDED",
+			"HTTP_X_CLUSTER_CLIENT_IP",
+			"HTTP_FORWARDED_FOR",
+			"HTTP_FORWARDED",
+			"REMOTE_ADDR"
+		];
 		foreach ($ip_keys as $key) {
-			if (array_key_exists($key, $_SERVER) === true) {
+			if (array_key_exists($key, $_SERVER)) {
 				foreach (explode(',', $_SERVER[$key]) as $ip) {
-					// trim for safety measures
-					$ip = trim($ip);
-					// attempt to validate IP
+					// trim and validate
+					$ip = self::trimIP($ip);
 					if (Library\Validate::IP($ip)) {
 						return $ip;
 					}
 				}
 			}
 		}
-
-		return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : false;
+		return "";
 	}
 
 	/**
@@ -46,12 +52,12 @@ class Browser {
 	 *
 	 * @return string               The scrubbed IP address
 	 */
-	public static function trimIP($ip) {
-		$pos = strrpos($ip, '.');
+	public static function trimIP(string $ip): string {
+		$pos = strrpos($ip, ".");
 		if ($pos !== false) {
 			$ip = substr($ip, 0, $pos+1);
 		}
-		return $ip . '0';
+		return $ip . "0";
 	}
 
 	/**
@@ -59,7 +65,7 @@ class Browser {
 	 *
 	 * @param string $location      The page to redirect the user to. Relative or absolute links are accepted.
 	 */
-	public static function redirect($location) {
+	public static function redirect(string $location) {
 		header("Location: " . $location);
 //		exit();
 	}

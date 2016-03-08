@@ -10,43 +10,40 @@ class Theme extends SettingAbstract {
 
 	// these theme settings are read from a single file, which we do only once
 	private static $themeFileRead = false;
-	private static $themeSettings = array();
+	private static $themeSettings = [];
 
 	// each of these options is retrieved from the database on first request
 	private static $activeTheme;
 	private static $colorScheme;
 
-	private static $colorSchemes = array(
+	private static $colorSchemes = [
 		0 => "Dark",
-		1 => "Light",
-	);
+		1 => "Light"
+	];
 
-	public static function getColorSchemeList() {
+	public static function getColorSchemeList(): array {
 		return self::$colorSchemes;
 	}
 
-	public static function getColorScheme() {
+	public static function getColorScheme(): int {
 		if (self::$colorScheme === NULL) {
 			self::$colorScheme = self::getValueFromDatabase("color_scheme");
 		}
 		return self::$colorScheme;
 	}
 
-	public static function setColorScheme($code) {
-		if (!Library\Validate::int($code)) {
-			throw new \InvalidArgumentException("Theme::setColorScheme expected int, got " . gettype($code) . " instead.");
-		}
+	public static function setColorScheme(int $code) {
 		if (!array_key_exists($code, self::$colorSchemes)) {
 			throw new \InvalidArgumentException("Nonexistent code supplied to Theme::setColorScheme.");
 		}
-		self::$colorScheme = (int) $code;
+		self::$colorScheme = $code;
 		self::saveValueToDatabase($code, "color_scheme");
 	}
 
 	/**
 	 * @return string
 	 */
-	public static function getActiveTheme() {
+	public static function getActiveTheme(): string {
 		if (self::$activeTheme === NULL) {
 			self::$activeTheme = self::getValueFromDatabase("active_theme");
 		}
@@ -56,24 +53,21 @@ class Theme extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getThemeDirectory() {
+	public static function getThemeDirectory(): string {
 		return "themes/" . self::getActiveTheme();
 	}
 
 	/**
 	 * @return string
 	 */
-	public static function getThemeDirectoryURL() {
+	public static function getThemeDirectoryURL(): string {
 		return Site::getBaseURL() . "/" . self::getThemeDirectory();
 	}
 
 	/**
 	 * @param string $theme
 	 */
-	public static function setActiveTheme($theme) {
-		if (!is_string($theme)) {
-			throw new \InvalidArgumentException("Theme::setActiveTheme expected string, got " . gettype($theme) . " instead.");
-		}
+	public static function setActiveTheme(string $theme) {
 		if (!Library\Validate::plainText($theme)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to Theme::setActiveTheme.");
 		}
@@ -84,7 +78,7 @@ class Theme extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getStylesheetLink() {
+	public static function getStylesheetLink(): string {
 		return self::getThemeDirectoryURL() . "/style.css";
 	}
 
@@ -111,21 +105,14 @@ class Theme extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getBodyClasses() {
+	public static function getBodyClasses(): string {
 		$classes = "";
-		// TODO implement this properly
-		$classes = self::addClass($classes, "logged-in");
+		// TODO implement this
+		$classes = Library\Format::addClass($classes, "logged-in");
 		if (isset($_GET["edit"]) && !isset($_GET["settings"])) {
-			$classes = self::addClass($classes, "editing");
+			$classes = Library\Format::addClass($classes, "editing");
 		}
 		return $classes;
-	}
-
-	private static function addClass($string, $class) {
-		if ($string == "") {
-			return $class;
-		}
-		return $string . " " . $class;
 	}
 
 	/**
@@ -133,7 +120,7 @@ class Theme extends SettingAbstract {
 	 *
 	 * @return array
 	 */
-	public static function readThemeFile($themeName) {
+	public static function readThemeFile(string $themeName): array {
 		$file = "themes/" . $themeName . "/theme.txt";
 		if (!file_exists($file)) {
 			throw new \RuntimeException("Theme file missing from theme '" . $themeName . "' folder.");
@@ -151,40 +138,31 @@ class Theme extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getThemeName() {
+	public static function getThemeName(): string {
 		if (!self::$themeFileRead) {
 			self::loadActiveThemeFile();
 		}
-		if (isset(self::$themeSettings["name"])) {
-			return self::$themeSettings["name"];
-		}
-		return "";
+		return self::$themeSettings["name"] ?? "";
 	}
 
 	/**
 	 * @return string
 	 */
-	public static function getThemeDescription() {
+	public static function getThemeDescription(): string {
 		if (!self::$themeFileRead) {
 			self::loadActiveThemeFile();
 		}
-		if (isset(self::$themeSettings["description"])) {
-			return self::$themeSettings["description"];
-		}
-		return "";
+		return self::$themeSettings["description"] ?? "";
 	}
 
 	/**
 	 * @return string
 	 */
-	public static function getThemeAuthor() {
+	public static function getThemeAuthor(): string {
 		if (!self::$themeFileRead) {
 			self::loadActiveThemeFile();
 		}
-		if (isset(self::$themeSettings["author"])) {
-			return self::$themeSettings["author"];
-		}
-		return "";
+		return self::$themeSettings["author"] ?? "";
 	}
 
 	/**
@@ -194,32 +172,27 @@ class Theme extends SettingAbstract {
 		if (!self::$themeFileRead) {
 			self::loadActiveThemeFile();
 		}
-		if (isset(self::$themeSettings["version"])) {
-			return self::$themeSettings["version"];
-		}
-		return "";
+		return self::$themeSettings["version"] ?? "";
 	}
 
 	public static function getNavigationArray() {
-		$pages = array();
+		$pages = [];
 		foreach (Page::getTopLevelWithoutContent() as $topLevelPage) {
-			$array = array(
+			$pages[] = [
 				"page" => $topLevelPage,
 				"children" => self::getNavigationArrayRecursive($topLevelPage),
-			);
-			$pages[] = $array;
+			];
 		}
 		return $pages;
 	}
 
 	private static function getNavigationArrayRecursive(Page $parent) {
-		$subPages = array();
+		$subPages = [];
 		foreach ($parent->getChildren() as $child) {
-			$array = array(
+			$subPages[] = [
 				"page" => $child,
 				"children" => self::getNavigationArrayRecursive($child),
-			);
-			$subPages[] = $array;
+			];
 		}
 		return $subPages;
 	}
@@ -258,7 +231,7 @@ class Theme extends SettingAbstract {
 
 				// include any sub-pages recursively, if they were desired
 				if (!$topLevelOnly) {
-					$children = $page->getChildren();
+					$children = $page->getPublicChildren();
 					if (count($children) > 0) {
 						$string .= PHP_EOL;
 						$string .= self::getNavigationMenuRecursive(false, $children, false);

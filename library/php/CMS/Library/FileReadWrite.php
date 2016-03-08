@@ -1,5 +1,7 @@
 <?php
 
+// TODO: start using PHP 7!
+
 namespace CMS\Library;
 
 class FileReadWrite {
@@ -15,7 +17,7 @@ class FileReadWrite {
 		return false;
 	}
 
-	private static $fileExtensionsPDF = array("pdf", "PDF");
+	private static $fileExtensionsPDF = ["pdf", "PDF"];
 
 	public static function readPDF($directory, $filenameWithoutExtension) {
 		return self::readFileGeneric($directory, $filenameWithoutExtension, self::$fileExtensionsPDF);
@@ -75,7 +77,7 @@ class FileReadWrite {
 		}
 	}
 
-	private static $fileExtensionsImage = array("svg", "SVG", "png", "PNG", "jpg", "JPG", "jpeg", "JPEG");
+	private static $fileExtensionsImage = ["svg", "SVG", "png", "PNG", "jpg", "JPG", "jpeg", "JPEG"];
 
 	public static function readImage($directory, $filenameWithoutExtension) {
 		return self::readFileGeneric($directory, $filenameWithoutExtension, self::$fileExtensionsImage);

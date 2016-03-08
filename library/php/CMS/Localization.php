@@ -37,12 +37,12 @@ class Localization {
 
 	private static $language = self::DEFAULT_LANGUAGE;
 
-	private static $languageCodes = array(
+	private static $languageCodes = [
 		"English" => "en",
-	);
+	];
 
-	private static $localizationStrings = array(
-		"English" => array(
+	private static $localizationStrings = [
+		"English" => [
 			self::LABEL_HOME => "Home",
 			self::LABEL_MANAGE_PAGES => "Manage Pages",
 			self::LABEL_ADD_PAGE => "Create New Page",
@@ -60,7 +60,7 @@ class Localization {
 			self::BUTTON_SAVE => "Save",
 			self::BUTTON_DELETE => "Delete",
 			self::ICON_HOME => "home",
-			self::ICON_MANAGE_PAGES => "bars",
+			self::ICON_MANAGE_PAGES => "list-ul",
 			self::ICON_ADD_PAGE => "plus",
 			self::ICON_EDIT_PAGE => "arrows",
 			self::ICON_EDIT_SAVE => "check",
@@ -69,37 +69,36 @@ class Localization {
 			self::ICON_PAGE_SETTINGS => "wrench",
 			self::ICON_SETTINGS => "gear",
 			self::ICON_LOGOUT => "sign-out",
-		),
-	);
+		],
+	];
 
-	public static function getLanguageCode() {
+	public static function getLanguageCode(): string {
 		return self::$languageCodes[self::$language];
 	}
 
-	public static function setLanguageCode($language) {
-		if (array_key_exists($language, self::$languageCodes)) {
-			self::$language = $language;
-		} else {
+	public function getLanguage(): string {
+		return self::$language;
+	}
+
+	public static function setLanguage(string $language) {
+		if (!array_key_exists($language, self::$languageCodes)) {
 			throw new \InvalidArgumentException("No localization data exists for the language '" . $language . "'.");
 		}
+		self::$language = $language;
 	}
 
-	public static function getLocalizedString($identifier) {
+	public static function getLocalizedString(int $identifier): string {
 		if (array_key_exists($identifier, self::$localizationStrings[self::$language])) {
 			return self::$localizationStrings[self::$language][$identifier];
-		} else if (array_key_exists($identifier, self::$localizationStrings[self::DEFAULT_LANGUAGE])) {
-			return self::$localizationStrings[self::DEFAULT_LANGUAGE][$identifier];
-		} else {
-			throw new \OutOfBoundsException("Nonexistent localized string identifier '" . $identifier . "' supplied as argument.");
 		}
+		if (array_key_exists($identifier, self::$localizationStrings[self::DEFAULT_LANGUAGE])) {
+			return self::$localizationStrings[self::DEFAULT_LANGUAGE][$identifier];
+		}
+		throw new \OutOfBoundsException("Nonexistent localized string identifier '" . $identifier . "' supplied as argument.");
 	}
 
-	public static function registerLocalization($language, $languageCode, array $localizationStrings) {
-		if (!is_string($language)) {
-			throw new \InvalidArgumentException("Localization::registerLocalization expected string for language name, got '" . gettype($language) . "' instead.");
-		} else if (!is_string($languageCode)) {
-			throw new \InvalidArgumentException("Localization::registerLocalization expected string for language code, got '" . gettype($languageCode) . "' instead.");
-		} else if (array_key_exists($language, self::$languageCodes)) {
+	public static function registerLocalization(string $language, string $languageCode, array $localizationStrings) {
+		if (array_key_exists($language, self::$languageCodes)) {
 			throw new \InvalidArgumentException("The language '" . $language . "' already has localization data.");
 		}
 		if (count($localizationStrings) == 0) {

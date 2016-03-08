@@ -11,14 +11,14 @@ if ($page->isHomepage()) {
 	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
-$data = array(
+$data = [
 	"parent_page" => 0,
 	"page_title" => "",
 	"page_shortname" => "",
 	"page_slug" => "",
-);
+];
 
-$errors = new CMS\Library\MessageCollector();
+$errors = new CMS\Library\MessageList();
 
 if (isset($_POST["page_delete_submit"])) {
 
@@ -37,7 +37,7 @@ if (isset($_POST["page_delete_submit"])) {
 				if ($success) {
 					CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 				} else {
-					$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageCollector::DANGER);
+					$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageList::DANGER);
 				}
 
 			} else if ($_POST["sub_page_decision"] == 2) {      // promote all sub-pages, by moving children to the level of this page
@@ -50,12 +50,12 @@ if (isset($_POST["page_delete_submit"])) {
 				if ($success) {
 					CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 				} else {
-					$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageCollector::DANGER);
+					$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageList::DANGER);
 				}
 
 			}
 		} else {
-			$errors->addMessage("You must decide what to do with the sub-pages.", CMS\Library\MessageCollector::WARNING);
+			$errors->addMessage("You must decide what to do with the sub-pages.", CMS\Library\MessageList::WARNING);
 		}
 
 	} else {
@@ -69,7 +69,7 @@ if (isset($_POST["page_delete_submit"])) {
 			}
 
 		} else {
-			$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageCollector::DANGER);
+			$errors->addMessage("An error occurred trying to delete the page.", CMS\Library\MessageList::DANGER);
 		}
 
 	}

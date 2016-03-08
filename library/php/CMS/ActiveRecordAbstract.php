@@ -18,34 +18,25 @@ abstract class ActiveRecordAbstract {
 
 	protected $id;
 
-	protected abstract function insert();
+	protected abstract function insert(): bool;
 
-	protected abstract function update();
+	protected abstract function update(): bool;
 
-	public function save() {
-		if (!isset($this->id) || $this->id == 0) {
+	public function save(): bool {
+		if (!isset($this->id) || is_null($this->id) || $this->id == 0) {
 			return $this->insert();
 		}
 		return $this->update();
 	}
 
-	abstract function delete();
+	abstract function delete(): bool;
 
-	public function getID() {
+	public function getID(): int {
 		return $this->id;
 	}
 
-	protected function setID($id) {
-		if (is_int($id)) {
-			$this->id = $id;
-		} else {
-			try {
-				$id = (int) $id;
-				$this->id  = $id;
-			} catch (\Exception $e) {
-				throw new \InvalidArgumentException("Expected int for instance ID, got " . gettype($id) . " instead.");
-			}
-		}
+	protected function setID(int $id) {
+		$this->id  = $id;
 	}
 
 }

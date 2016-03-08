@@ -20,9 +20,6 @@ class ContactForm extends CMS\Plugin {
 	private $allowAttachment;
 	private $requireAttachment;
 
-	private $headingLevel;
-	private $content;
-
 	protected function initialize() {
 		$this->allowSenderEmail = true;
 		$this->requireSenderEmail = true;
@@ -40,96 +37,95 @@ class ContactForm extends CMS\Plugin {
 		return $this->recipientEmail;
 	}
 
-	public function setRecipientEmail($email) {
-		if (CMS\Library\Validate::email($email)) {
-			$this->recipientEmail = $email;
-		} else {
+	public function setRecipientEmail(string $email) {
+		if (!CMS\Library\Validate::email($email)) {
 			throw new \InvalidArgumentException("Invalid email address supplied to setRecipientEmail.");
 		}
+		$this->recipientEmail = $email;
 	}
 
-	public function senderEmailAllowed() {
+	public function senderEmailAllowed(): bool {
 		return $this->allowSenderEmail;
 	}
 
-	public function allowSenderEmail($bool) {
-		$this->allowSenderEmail = ($bool) ? true : false;
+	public function allowSenderEmail(bool $allowed) {
+		$this->allowSenderEmail = ($allowed) ? true : false;
 	}
 
-	public function senderEmailRequired() {
+	public function senderEmailRequired(): bool {
 		return $this->requireSenderEmail;
 	}
 
-	public function requireSenderEmail($bool) {
-		$this->requireSenderEmail = ($bool) ? true : false;
+	public function requireSenderEmail(bool $required) {
+		$this->requireSenderEmail = ($required) ? true : false;
 	}
 
-	public function senderNameAllowed() {
+	public function senderNameAllowed(): bool {
 		return $this->allowSenderName;
 	}
 
-	public function allowSenderName($bool) {
-		$this->allowSenderName = ($bool) ? true : false;
+	public function allowSenderName(bool $allowed) {
+		$this->allowSenderName = ($allowed) ? true : false;
 	}
 
-	public function senderNameRequired() {
+	public function senderNameRequired(): bool {
 		return $this->requireSenderName;
 	}
 
-	public function requireSenderName($bool) {
-		$this->requireSenderName = ($bool) ? true : false;
+	public function requireSenderName(bool $required) {
+		$this->requireSenderName = ($required) ? true : false;
 	}
 
-	public function subjectAllowed() {
+	public function subjectAllowed(): bool {
 		return $this->allowSubject;
 	}
 
-	public function allowSubject($bool) {
-		$this->allowSubject = ($bool) ? true : false;
+	public function allowSubject(bool $allowed) {
+		$this->allowSubject = ($allowed) ? true : false;
 	}
 
-	public function subjectRequired() {
+	public function subjectRequired(): bool {
 		return $this->requireSubject;
 	}
 
-	public function requireSubject($bool) {
-		$this->requireSubject = ($bool) ? true : false;
+	public function requireSubject(bool $required) {
+		$this->requireSubject = ($required) ? true : false;
 	}
 
-	public function messageAllowed() {
+	public function messageAllowed(): bool {
 		return $this->allowMessage;
 	}
 
-	public function allowMessage($bool) {
-		$this->allowMessage = ($bool) ? true : false;
+	public function allowMessage(bool $allowed) {
+		$this->allowMessage = ($allowed) ? true : false;
 	}
 
-	public function messageRequired() {
+	public function messageRequired(): bool {
 		return $this->requireMessage;
 	}
 
-	public function requireMessage($bool) {
-		$this->requireMessage = ($bool) ? true : false;
+	public function requireMessage(bool $required) {
+		$this->requireMessage = ($required) ? true : false;
 	}
 
-	public function attachmentlAllowed() {
+	public function attachmentlAllowed(): bool {
 		return $this->allowAttachment;
 	}
 
-	public function allowAttachment($bool) {
-		$this->allowAttachment = ($bool) ? true : false;
+	public function allowAttachment(bool $allowed) {
+		$this->allowAttachment = ($allowed) ? true : false;
 	}
 
-	public function attachmentRequired() {
+	public function attachmentRequired(): bool {
 		return $this->requireAttachment;
 	}
 
-	public function requireAttachment($bool) {
-		$this->requireAttachment = ($bool) ? true : false;
+	public function requireAttachment(bool $required) {
+		$this->requireAttachment = ($required) ? true : false;
 	}
 
-	protected function getValuesAsArray() {
-		$values = array(
+	protected function getValuesAsArray(): array {
+		return [
 			"pluginVersion" => self::$pluginVersion,
 			"recipientEmail" => $this->recipientEmail,
 			"allowSenderEmail" => $this->allowSenderEmail,
@@ -142,8 +138,7 @@ class ContactForm extends CMS\Plugin {
 			"requireMessage" => $this->requireMessage,
 			"allowAttachment" => $this->allowAttachment,
 			"requireAttachment" => $this->requireAttachment,
-		);
-		return $values;
+		];
 	}
 
 	protected function setValuesWithArray(array $values) {
@@ -160,11 +155,11 @@ class ContactForm extends CMS\Plugin {
 		$this->requireAttachment($values["requireAttachment"]);
 	}
 
-	public function getPublicVersion() {
+	public function getPublicVersion(): string {
 
 	}
 
-	public function getEditableVersion() {
+	public function getEditableVersion(): string {
 
 	}
 }

@@ -1,9 +1,10 @@
 <?php
 
+// TODO: start using PHP 7!
+
 namespace CMS;
 
 class Page extends ActiveRecordAbstract {
-
 
 	private $parentID;
 	private $pageType;
@@ -19,15 +20,20 @@ class Page extends ActiveRecordAbstract {
 	const VISIBILITY_PRIVATE = 1;
 	const VISIBILITY_SECRET = 2;
 
-	public static function getVisibilityDescriptions() {
-		return array(
-			self::VISIBILITY_PUBLIC => "Public pages are visible for all users on your site and are shown in navigation menus.",
-			self::VISIBILITY_PRIVATE => "Private pages are only visible to you while logged in. This option is perfect for working on a new page before publishing.",
-			self::VISIBILITY_SECRET => "Secret pages are visible to anyone with the page URL, but will not be shown in navigation menus.",
-		);
+	private static $visibilityDescriptions = [
+		self::VISIBILITY_PUBLIC =>
+			"Public pages are visible for all users on your site and are shown in navigation menus.",
+		self::VISIBILITY_PRIVATE =>
+			"Private pages are only visible to you while logged in. This option is perfect for working on a new page before publishing.",
+		self::VISIBILITY_SECRET =>
+			"Secret pages are visible to anyone with the page URL, but will not be shown in navigation menus.",
+	];
+
+	public static function getVisibilityDescriptions(): array {
+		return self::$visibilityDescriptions;
 	}
 
-	private function __construct($pageType, $parentID, $visibility, $title, $shortname, $slug, $content) {
+	private function __construct(string $pageType, int $parentID, int $visibility, string $title, string $shortname, string $slug, string $content) {
 		$this->setPageType($pageType);
 		$this->setParentID($parentID);
 		$this->setVisibility($visibility);
@@ -42,12 +48,12 @@ class Page extends ActiveRecordAbstract {
 	 *
 	 * @return Page
 	 */
-	private static function withDatabaseRecord(array $row) {
+	private static function withDatabaseRecord(array $row): Page {
 		if (!isset($row["id"])) {
 			throw new \InvalidArgumentException("Missing page ID from constructor.");
 		}
 		if (!isset($row["page_type"])) {
-			$row["page_type"] = "default";
+			$row["page_type"] = Pages::PAGE_TYPE_DEFAULT;
 		}
 		if (!isset($row["parent"])) {
 			$row["parent"] = 0;
@@ -78,11 +84,7 @@ class Page extends ActiveRecordAbstract {
 	 *
 	 * @return Page
 	 */
-	public static function withID($id) {
-		if (!Library\Validate::int($id)) {
-			throw new \InvalidArgumentException("Page::withID expected int, got " . gettype($id) . " instead.");
-		}
-		$id = (int) $id;
+	public static function withID(int $id): Page {
 		if ($id <= 0) {
 			throw new \OutOfRangeException("Page IDs must all be greater than 0.");
 		}
@@ -106,7 +108,7 @@ class Page extends ActiveRecordAbstract {
 	 *
 	 * @return Page
 	 */
-	public static function withSlug($slug) {
+	public static function withSlug(string $slug): Page {
 		if (!Library\Validate::plainText($slug)) {
 			throw new \OutOfRangeException("Invalid slug supplied to Page::withSlug.");
 		}
@@ -128,7 +130,7 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return Page[]
 	 */
-	public static function getAllWithoutContent() {
+	public static function getAllWithoutContent(): array {
 		try {
 			$pdo    = DB::getHandle();
 			$stmt   = $pdo->query("SELECT id, parent, visibility, title, short_title, slug FROM pages");
@@ -136,7 +138,7 @@ class Page extends ActiveRecordAbstract {
 			if ($result === false) {
 				throw new \PDOException();
 			}
-			$pages = array();
+			$pages = [];
 			foreach ($result as $page) {
 				$pages[$page["id"]] = self::withDatabaseRecord($page);
 			}
@@ -149,7 +151,7 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return Page[]
 	 */
-	public static function getTopLevelWithoutContent() {
+	public static function getTopLevelWithoutContent(): array {
 		try {
 			$pdo    = DB::getHandle();
 			$stmt   = $pdo->query("SELECT id, visibility, title, short_title, slug FROM pages WHERE parent = 0");
@@ -157,7 +159,7 @@ class Page extends ActiveRecordAbstract {
 			if ($result === false) {
 				throw new \PDOException();
 			}
-			$pages = array();
+			$pages = [];
 			foreach ($result as $page) {
 				$page["parent"] = 0;
 				$pages[$page["id"]] = self::withDatabaseRecord($page);
@@ -171,14 +173,21 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return Page
 	 */
-	public static function getHomepage() {
+	public static function getHomepage(): Page {
 		return self::withSlug(self::HOME_SLUG);
 	}
 
 	/**
+	 * @param $pageType
+	 * @param $parentID
+	 * @param $visibility
+	 * @param $title
+	 * @param $shortname
+	 * @param $slug
+	 *
 	 * @return Page
 	 */
-	public static function create($pageType, $parentID, $visibility, $title, $shortname, $slug) {
+	public static function create(string $pageType, int $parentID, int $visibility, string $title, string $shortname, string $slug) {
 		$page = new self($pageType, $parentID, $visibility, $title, $shortname, $slug, "[]");
 		$success = $page->insert();
 		if (!$success) {
@@ -187,7 +196,10 @@ class Page extends ActiveRecordAbstract {
 		return $page;
 	}
 
-	protected function insert() {
+	protected function insert(): bool {
+		if ($this->id) {
+			throw new \BadMethodCallException("Attempt to insert existing page.");
+		}
 		$content = $this->getContentAsJSON();
 		try {
 			$pdo  = DB::getHandle();
@@ -207,9 +219,9 @@ class Page extends ActiveRecordAbstract {
 		}
 	}
 
-	protected function update() {
+	protected function update(): bool {
 		if (!$this->id) {
-			throw new BadMethodCallException("Attempt to update nonexistent page.");
+			throw new \BadMethodCallException("Attempt to update nonexistent page.");
 		}
 		$content = $this->getContentAsJSON();
 		try {
@@ -233,7 +245,7 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return bool
 	 */
-	public function delete() {
+	public function delete(): bool {
 		if (!$this->id) {
 			throw new \BadMethodCallException("Attempt to delete nonexistent page.");
 		}
@@ -251,22 +263,22 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return int
 	 */
-	public function getParentID() {
+	public function getParentID(): int {
 		return $this->parentID;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getPageTypeIdentifier() {
+	public function getPageTypeIdentifier(): string {
 		return $this->pageType;
 	}
 
-	public function getPageTypeArray() {
+	public function getPageTypeArray(): array {
 		return Pages::getPageType($this->pageType);
 	}
 
-	public function setPageType($identifier) {
+	public function setPageType(string $identifier) {
 		if (Library\Validate::plainText($identifier)) {
 			$this->pageType = $identifier;
 		} else {
@@ -277,24 +289,21 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return Page
 	 */
-	public function getParent() {
+	public function getParent(): Page {
 		return self::withID($this->parentID);
 	}
 
 	/**
 	 * @param int $id
 	 */
-	public function setParentID($id) {
-		if (!Library\Validate::int($id)) {
-			throw new \InvalidArgumentException("setParentID expected int, got " . gettype($id) . " instead.");
-		}
+	public function setParentID(int $id) {
 		$this->parentID = (int) $id;
 	}
 
 	/**
 	 * @return int[]
 	 */
-	public function getChildrenIDs() {
+	public function getChildrenIDs(): array {
 		try {
 			$pdo  = DB::getHandle();
 			$stmt = $pdo->prepare("SELECT id FROM pages WHERE parent = :id");
@@ -304,7 +313,7 @@ class Page extends ActiveRecordAbstract {
 			if ($result === false) {
 				throw new \PDOException();
 			}
-			$childIDs = array();
+			$childIDs = [];
 			foreach ($result as $row) {
 				$childIDs[] = (int) $row;
 			}
@@ -317,7 +326,7 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return Page[]
 	 */
-	public function getChildren() {
+	public function getChildren(): array {
 		try {
 			$pdo  = DB::getHandle();
 			$stmt = $pdo->prepare("SELECT id, parent, visibility, title, short_title, slug FROM pages WHERE parent = :id");
@@ -327,7 +336,57 @@ class Page extends ActiveRecordAbstract {
 			if ($result === false) {
 				throw new \PDOException();
 			}
-			$childIDs = array();
+			$childIDs = [];
+			foreach ($result as $row) {
+				$childIDs[] = self::withDatabaseRecord($row);
+			}
+			return $childIDs;
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve child page list from the database.");
+		}
+	}
+
+	/**
+	 * @return int[]
+	 */
+	public function getPublicChildrenIDs(): array {
+		$visibility = self::VISIBILITY_PUBLIC;
+		try {
+			$pdo  = DB::getHandle();
+			$stmt = $pdo->prepare("SELECT id FROM pages WHERE parent = :id AND visibility = :public");
+			$stmt->bindParam(":id", $this->id);
+			$stmt->bindParam(":public", $visibility);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			if ($result === false) {
+				throw new \PDOException();
+			}
+			$childIDs = [];
+			foreach ($result as $row) {
+				$childIDs[] = (int) $row;
+			}
+			return $childIDs;
+		} catch (\PDOException $e) {
+			throw new \RuntimeException("Unable to retrieve child page ID list from the database.");
+		}
+	}
+
+	/**
+	 * @return Page[]
+	 */
+	public function getPublicChildren(): array {
+		$visibility = self::VISIBILITY_PUBLIC;
+		try {
+			$pdo  = DB::getHandle();
+			$stmt = $pdo->prepare("SELECT id, parent, visibility, title, short_title, slug FROM pages WHERE parent = :id AND visibility = :public");
+			$stmt->bindParam(":id", $this->id);
+			$stmt->bindParam(":public", $visibility);
+			$stmt->execute();
+			$result = $stmt->fetchAll();
+			if ($result === false) {
+				throw new \PDOException();
+			}
+			$childIDs = [];
 			foreach ($result as $row) {
 				$childIDs[] = self::withDatabaseRecord($row);
 			}
@@ -340,12 +399,12 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return Page[]
 	 */
-	public function getDescendants() {
+	public function getDescendants(): array {
 		return $this->getDescendantsRecursive($this->getChildren());
 	}
 
-	private function getDescendantsRecursive(array $pageSet) {
-		$descendants = array();
+	private function getDescendantsRecursive(array $pageSet): array {
+		$descendants = [];
 		foreach ($pageSet as $page) {
 			$descendants[] = $page;
 			$descendants = array_merge($descendants, $page->getChildren());
@@ -356,14 +415,14 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return bool
 	 */
-	public function isHomepage() {
+	public function isHomepage(): bool {
 		return ($this->slug == self::HOME_SLUG) ? true : false;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getURL() {
+	public function getURL(): string {
 		if ($this->isHomepage()) {
 			return Site::getBaseURL();
 		}
@@ -373,29 +432,28 @@ class Page extends ActiveRecordAbstract {
 //		return Site::getBaseURL() . "?id=" . $this->id;         // set the URL using the page ID as a parameter
 	}
 
-	public function getVisibility() {
+	public function getVisibility(): int {
 		return $this->visibility;
 	}
 
-	public function setVisibility($visibility) {
-		if (array_key_exists($visibility, self::getVisibilityDescriptions())) {
-			$this->visibility = $visibility;
-		} else {
-			throw new \InvalidArgumentException("Nonexistent page visibility option supplied to setVisibility.");
+	public function setVisibility(int $visibility) {
+		if (!array_key_exists($visibility, self::getVisibilityDescriptions())) {
+		throw new \InvalidArgumentException("Nonexistent page visibility option supplied to setVisibility.");
 		}
+		$this->visibility = $visibility;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->title;
 	}
 
 	/**
 	 * @param string $title
 	 */
-	public function setTitle($title) {
+	public function setTitle(string $title) {
 		if (!Library\Validate::plainText($title, true)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setTitle.");
 		}
@@ -405,14 +463,14 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return string
 	 */
-	public function getShortname() {
+	public function getShortname(): string {
 		return $this->shortname;
 	}
 
 	/**
 	 * @param string $shortname
 	 */
-	public function setShortname($shortname) {
+	public function setShortname(string $shortname) {
 		if (!Library\Validate::plainText($shortname)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setShortname.");
 		}
@@ -422,25 +480,26 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @return string
 	 */
-	public function getSlug() {
+	public function getSlug(): string {
 		return $this->slug;
 	}
 
 	/**
 	 * @param string $slug
 	 */
-	public function setSlug($slug) {
+	public function setSlug(string $slug) {
 		if (!Library\Validate::slug($slug)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to setSlug.");
 		}
 		$this->slug = $slug;
 	}
 
-	public function getContentAsJSON() {
-		$content = array();
+	public function getContentAsJSON(): string {
+		$content = [];
 		foreach ($this->content as $zone) {
-			$zoneArray = array();
+			$zoneArray = [];
 			foreach ($zone as $plugin) {
+				/** @var Plugin $plugin */
 				$zoneArray[] = $plugin->asValuesArray();
 			}
 			$content[] = $zoneArray;
@@ -451,8 +510,8 @@ class Page extends ActiveRecordAbstract {
 	/**
 	 * @param string $json
 	 */
-	public function setContentWithJSON($json) {
-		$content = array();
+	public function setContentWithJSON(string $json) {
+		$content = [];
 		$array = json_decode($json, true);
 		// check for JSON errors
 		if (json_last_error() !== JSON_ERROR_NONE) {
@@ -460,7 +519,7 @@ class Page extends ActiveRecordAbstract {
 		}
 		// first level of the array is the number of editable zones
 		foreach ($array as $zone => $plugins) {
-			$content[$zone] = array();
+			$content[$zone] = [];
 			// second level of the array is the list of plugins
 			foreach ($array[$zone] as $plugin => $values) {
 				try {
@@ -473,46 +532,51 @@ class Page extends ActiveRecordAbstract {
 		}
 		// if no editable zones were set, create one
 		if (count($content) == 0) {
-			$content[] = array();
+			$content[] = [];
 		}
 		$this->content = $content;
 	}
 
-	public function getZoneOutput($zone) {
+	public function getZoneOutput(int $zone): string {
+		$output = '<div class="cms-zone cms-zone-' . $zone . '">' . PHP_EOL;
 		if (isset($_GET["edit"]) && !isset($_GET["settings"])) {
-			return $this->getEditableZoneOutput($zone);
+			$output .= $this->getEditableZoneOutput($zone);
 		} else {
-			return $this->getPublicZoneOutput($zone);
+			$output .= $this->getPublicZoneOutput($zone);
 		}
+		$output .= '</div>' . PHP_EOL;
+		return $output;
 	}
 
-	private function getPublicZoneOutput($zone) {
-		if (array_key_exists($zone, $this->content)) {
-			$output = "";
-			foreach ($this->content[$zone] as $plugin) {
-				$output .= $plugin->getPublicVersion() . PHP_EOL;
-			}
-			return $output;
+	private function getPublicZoneOutput(int $zone): string {
+		if (!array_key_exists($zone, $this->content)) {
+			return "";
 		}
-		throw new \InvalidArgumentException("Nonexistent zone supplied to getZoneContent.");
+		$output = "";
+		foreach ($this->content[$zone] as $plugin) {
+			/** @var Plugin $plugin */
+			$output .= $plugin->getPublicVersion() . PHP_EOL;
+		}
+		return $output;
 	}
 
-	private function getEditableZoneOutput($zone) {
-		if (array_key_exists($zone, $this->content)) {
-			$output = "";
-			$output .= '<link rel="stylesheet" property="stylesheet" href="' . Site::getBaseURL() . '/library/css/plugindefaults.css">' . PHP_EOL;
-			foreach ($this->content[$zone] as $plugin) {
-				$output .= '<div class="cms-plugin-container">' . PHP_EOL;
-				$stylesheet = $plugin->getEditableStylesheet();
-				if ($stylesheet) {
-					$output .= '<link rel="stylesheet" property="stylesheet" href="' . $stylesheet . '">' . PHP_EOL;
-				}
-				$output .= $plugin->getEditableVersion() . PHP_EOL;
-				$output .= '</div>' . PHP_EOL;
-			}
-			return $output;
+	private function getEditableZoneOutput(int $zone): string {
+		if (!array_key_exists($zone, $this->content)) {
+			return "";
 		}
-		throw new \InvalidArgumentException("Nonexistent zone supplied to getZoneContent.");
+		$output = "";
+		$output .= '<link rel="stylesheet" property="stylesheet" href="' . Site::getBaseURL() . '/library/css/plugindefaults.css">' . PHP_EOL;
+		foreach ($this->content[$zone] as $plugin) {
+			/** @var Plugin $plugin */
+			$output .= '<div class="cms-plugin-container">' . PHP_EOL;
+			$stylesheet = $plugin->getEditableStylesheet();
+			if ($stylesheet) {
+				$output .= '<link rel="stylesheet" property="stylesheet" href="' . $stylesheet . '">' . PHP_EOL;
+			}
+			$output .= $plugin->getEditableVersion() . PHP_EOL;
+			$output .= '</div>' . PHP_EOL;
+		}
+		return $output;
 	}
 
 }

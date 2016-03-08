@@ -4,14 +4,12 @@ namespace CMS;
 
 class Site extends SettingAbstract {
 
-	// Make these private to prevent instantiation
+	const SETTING_TYPE_SHORT_TEXT   = 1;
+	const SETTING_TYPE_TOGGLE       = 2;
+	const SETTING_TYPE_LONG_TEXT    = 3;
+
 	private function __construct() {}
 	private function __clone() {}
-
-	// the various option types settings can take on
-	const SETTING_TYPE_SHORT_TEXT = 1;
-	const SETTING_TYPE_TOGGLE = 2;
-	const SETTING_TYPE_LONG_TEXT = 3;
 
 	private static $title;
 	private static $description;
@@ -20,7 +18,7 @@ class Site extends SettingAbstract {
 
 	private static $baseURL;
 
-	public static function getBaseURL() {
+	public static function getBaseURL(): string {
 		if (self::$baseURL === NULL) {
 			// set the base URL on first call
 			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "" && $_SERVER["HTTPS"] != "off") {
@@ -37,7 +35,7 @@ class Site extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getTitle() {
+	public static function getTitle(): string {
 		if (self::$title === NULL) {
 			self::$title = self::getValueFromDatabase("site_title");
 		}
@@ -47,10 +45,7 @@ class Site extends SettingAbstract {
 	/**
 	 * @param string $title
 	 */
-	public static function setTitle($title) {
-		if (!is_string($title)) {
-			throw new \InvalidArgumentException("Site::setTitle expected string, got " . gettype($title) . " instead.");
-		}
+	public static function setTitle(string $title) {
 		if (!Library\Validate::plainText($title)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to Site::setTitle.");
 		}
@@ -61,7 +56,7 @@ class Site extends SettingAbstract {
 	/**
 	 * @return string
 	 */
-	public static function getDescription() {
+	public static function getDescription(): string {
 		if (self::$description === NULL) {
 			self::$description = self::getValueFromDatabase("site_description");
 		}
@@ -71,10 +66,7 @@ class Site extends SettingAbstract {
 	/**
 	 * @param string $description
 	 */
-	public static function setDescription($description) {
-		if (!is_string($description)) {
-			throw new \InvalidArgumentException("Site::setDescription expected string, got " . gettype($description) . " instead.");
-		}
+	public static function setDescription(string $description) {
 		if (!Library\Validate::plainText($description)) {
 			throw new \InvalidArgumentException("Invalid string content supplied to Site::setDescription.");
 		}
@@ -82,35 +74,41 @@ class Site extends SettingAbstract {
 		self::saveValueToDatabase($description, "site_description");
 	}
 
-	public static function getAdminName() {
+	/**
+	 * @return string
+	 */
+	public static function getAdminName(): string {
 		if (self::$adminName === NULL) {
 			self::$adminName = self::getValueFromDatabase("admin_name");
 		}
 		return self::$adminName;
 	}
 
-	public static function setAdminName($name) {
-		if (!is_string($name)) {
-			throw new \InvalidArgumentException("Site::setAdminName expected string, got " . gettype($name) . " instead.");
-		}
-		if (!Library\Validate::name($name)) {
+	/**
+	 * @param string $name
+	 */
+	public static function setAdminName(string $name) {
+		if (!Library\Validate::plainText($name)) {
 			throw new \InvalidArgumentException("Invalid name supplied to Site::setAdminName.");
 		}
 		self::$adminName = $name;
 		self::saveValueToDatabase($name, "admin_name");
 	}
 
-	public static function getAdminEmail() {
+	/**
+	 * @return string
+	 */
+	public static function getAdminEmail(): string {
 		if (self::$adminEmail === NULL) {
 			self::$adminEmail = self::getValueFromDatabase("admin_email");
 		}
 		return self::$adminEmail;
 	}
 
-	public static function setAdminEmail($email) {
-		if (!is_string($email)) {
-			throw new \InvalidArgumentException("Site::setAdminEmail expected string, got " . gettype($email) . " instead.");
-		}
+	/**
+	 * @param string $email
+	 */
+	public static function setAdminEmail(string $email) {
 		if (!Library\Validate::email($email)) {
 			throw new \InvalidArgumentException("Invalid email address supplied to Site::setAdminEmail.");
 		}
@@ -118,6 +116,9 @@ class Site extends SettingAbstract {
 		self::saveValueToDatabase($email, "admin_email");
 	}
 
+	/**
+	 *
+	 */
 	public static function set404Response() {
 		http_response_code(404);
 		if (file_exists(Theme::getThemeDirectory() . "/404.php")) {
@@ -128,6 +129,9 @@ class Site extends SettingAbstract {
 		die();
 	}
 
+	/**
+	 *
+	 */
 	public static function set403Response() {
 		http_response_code(403);
 		if (file_exists(Theme::getThemeDirectory() . "/403.php")) {

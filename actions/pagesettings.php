@@ -7,14 +7,15 @@ try {
 	CMS\Browser::redirect(CMS\Site::getBaseURL() . "?pages");
 }
 
-$data = array(
+$data = [
 	"parent_page" => $page->getParentID(),
 	"page_title" => $page->getTitle(),
 	"page_shortname" => $page->getShortname(),
 	"page_visibility" => $page->getVisibility(),
-);
+	"page_type" => $page->getPageTypeIdentifier(),
+];
 
-$errors = new CMS\Library\MessageCollector();
+$errors = new CMS\Library\MessageList();
 
 if (isset($_POST["page_settings_submit"])) {
 
@@ -29,10 +30,10 @@ if (isset($_POST["page_settings_submit"])) {
 		$data["page_title"] = trim( $_POST["page_title"] );
 		if ( ! $data["page_title"] ) {
 			$continue = false;
-			$errors->addMessage( "Give the page a title.", CMS\Library\MessageCollector::WARNING );
+			$errors->addMessage( "Give the page a title.", CMS\Library\MessageList::WARNING );
 		} else if ( ! CMS\Library\Validate::plainText( $data["page_title"] ) ) {
 			$continue = false;
-			$errors->addMessage( "Enter a valid page title.", CMS\Library\MessageCollector::WARNING );
+			$errors->addMessage( "Enter a valid page title.", CMS\Library\MessageList::WARNING );
 		} else {
 			$page->setTitle( $data["page_title"] );
 		}
@@ -42,17 +43,17 @@ if (isset($_POST["page_settings_submit"])) {
 		$data["page_shortname"] = trim( $_POST["page_shortname"] );
 		if ( ! $data["page_shortname"] ) {
 			$continue = false;
-			$errors->addMessage( "Give the page a shortname.", CMS\Library\MessageCollector::WARNING );
+			$errors->addMessage( "Give the page a shortname.", CMS\Library\MessageList::WARNING );
 		} else if ( ! CMS\Library\Validate::plainText( $data["page_shortname"] ) ) {
 			$continue = false;
-			$errors->addMessage( "Enter a valid shortname.", CMS\Library\MessageCollector::WARNING );
+			$errors->addMessage( "Enter a valid shortname.", CMS\Library\MessageList::WARNING );
 		} else {
 			$page->setShortname( $data["page_shortname"] );
 			$slug = CMS\Library\Format::slug($data["page_shortname"]);
 			if ($slug !== $page->getSlug()) {
 				if (CMS\Pages::slugExists($slug)) {
 					$continue = false;
-					$errors->addMessage("A page with that shortname already exists.", CMS\Library\MessageCollector::WARNING);
+					$errors->addMessage("A page with that shortname already exists.", CMS\Library\MessageList::WARNING);
 				} else {
 					$page->setSlug($slug);
 				}
@@ -66,8 +67,16 @@ if (isset($_POST["page_settings_submit"])) {
 			$page->setVisibility($data["page_visibility"]);
 		} else {
 			$continue = false;
-			$errors->addMessage("Select a valid page visibility option.", CMS\Library\MessageCollector::WARNING);
+			$errors->addMessage("Select a valid page visibility option.", CMS\Library\MessageList::WARNING);
 		}
+	}
+
+	if (CMS\Pages::pageTypeExists($_POST["page_type"])) {
+		$data["page_type"] = $_POST["page_type"];
+		$page->setPageType($data["page_type"]);
+	} else {
+		$continue = false;
+		$errors->addMessage("Select an existing page type.", CMS\Library\MessageList::WARNING);
 	}
 
 	if ($continue) {
@@ -131,8 +140,39 @@ if (isset($_POST["page_settings_submit"])) {
 
 		</section>
 
+		<?php if (count(CMS\Pages::getPageTypes()) > 1) { ?>
+
+		<section>
+
+			<h2>Page Type</h2>
+
+			<div class="radio-group cms-page-type-list">
+
+				<?php foreach (CMS\Pages::getPageTypes() as $identifier => $type) { ?>
+					<div class="page-type">
+						<label>
+							<input type="radio" name="page_type" id="page_type_<?php echo $identifier; ?>" value="<?php echo $identifier; ?>" <?php if ($data["page_type"] == $identifier) echo "checked"; ?>>
+							<span class="page-type-preview" <?php if (isset($type["icon"])) echo "style=\"background-image: url('" . $type["icon"] . "')\""; ?>></span>
+							<span class="page-type-name"><?php echo $type["name"]; ?></span>
+							<?php if (isset($type["description"]) && trim($type["description"]) !== "") { ?>
+								<span class="page-type-description"><?php echo $type["description"]; ?></span>
+							<?php } ?>
+						</label>
+					</div>
+				<?php } ?>
+
+			</div>
+
+		</section>
+
+		<?php } ?>
+
 		<input type="hidden" name="page_settings_submit">
 		<button type="submit"><i class="fa fa-check-circle"></i> <?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::BUTTON_SAVE); ?></button>
+
+		<?php if (!$page->isHomepage()) { ?>
+			<a href="<?php echo CMS\Site::getBaseURL(); ?>?delete=<?php echo $page->getID(); ?>" class="cancel-button" style="float: right; line-height: 2.2em;"><i class="fa fa-<?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::ICON_DELETE_PAGE); ?>"></i><?php echo \CMS\Localization::getLocalizedString(\CMS\Localization::BUTTON_DELETE); ?></a>
+		<?php } ?>
 
 	</form>
 

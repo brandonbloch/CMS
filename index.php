@@ -74,13 +74,13 @@ if (isset($_GET["slug"]) || isset($_GET["id"])) {
 }
 
 // delete page requested by page ID
-if (isset($_GET["delete"]) && CMS\Library\Validate::int($_GET["delete"])) {
+if (isset($_GET["delete"])) {
 	include "actions/pagedelete.php";
 	die();
 }
 
 // edit page requested by page ID
-if (isset($_GET["edit"]) && CMS\Library\Validate::int($_GET["edit"])) {
+if (isset($_GET["edit"])) {
 	if (isset($_GET["settings"])) {
 		include "actions/pagesettings.php";
 		die();

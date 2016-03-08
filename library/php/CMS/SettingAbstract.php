@@ -4,7 +4,7 @@ namespace CMS;
 
 abstract class SettingAbstract {
 
-	protected static function getValueFromDatabase($shortname) {
+	protected static function getValueFromDatabase(string $shortname): string {
 		try {
 			$pdo    = DB::getHandle();
 			$stmt   = $pdo->prepare("SELECT value FROM settings WHERE short_name = :short_name");
@@ -20,7 +20,7 @@ abstract class SettingAbstract {
 		return $result["value"];
 	}
 
-	protected static function saveValueToDatabase($value, $shortname) {
+	protected static function saveValueToDatabase(string $value, string $shortname) {
 		try {
 			$pdo   = DB::getHandle();
 			$stmt = $pdo->prepare("UPDATE settings SET value = :value WHERE short_name = :short_name");

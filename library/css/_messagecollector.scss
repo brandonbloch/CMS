@@ -1,3 +1,5 @@
+@import 'variables';
+
 @mixin generateFadeIn($animationName, $fadeIntoColor) {
 
 	@-webkit-keyframes #{$animationName} {
@@ -42,7 +44,7 @@
 
 }
 
-.message-collector {
+.cms-message-list {
 	display: block;
 	margin-bottom: 30px;
 	ul {
@@ -51,16 +53,13 @@
 	}
 }
 
-.message-collector-warning {
-}
-
-.message-collector:empty {
+.cms-message-list:empty {
 	display: none !important;
 }
 
 @include generateFadeIn("fade-in", $messageCollectorInfo);
 
-.message-collector {
+.cms-message-list {
 	background-color: $messageCollectorInfo;
 	color: $adminPageBackground;
 	padding: 0.7rem 0.9rem 0.7rem 0.9rem;
@@ -72,7 +71,7 @@
 	animation: fade-in 1.5s 1;
 }
 
-.message-collector ul {
+.cms-message-list ul {
 	list-style: disc;
 	padding-left: 1.4rem;
 	margin: 0;
@@ -80,7 +79,7 @@
 
 @include generateFadeIn("fade-in-success", $messageCollectorSuccess);
 
-.message-collector-success {
+.cms-message-status-success {
 	background-color: $messageCollectorSuccess;
 	-webkit-animation: fade-in-success 1.5s 1;
 	-moz-animation: fade-in-success 1.5s 1;
@@ -90,7 +89,7 @@
 
 @include generateFadeIn("fade-in-warning", $messageCollectorWarning);
 
-.message-collector-warning {
+.cms-message-status-warning {
 	background-color: $messageCollectorWarning;
 	-webkit-animation: fade-in-warning 1.5s 1;
 	-moz-animation: fade-in-warning 1.5s 1;
@@ -100,7 +99,7 @@
 
 @include generateFadeIn("fade-in-danger", $messageCollectorDanger);
 
-.message-collector-danger {
+.cms-message-status-danger {
 	background-color: $messageCollectorDanger;
 	-webkit-animation: fade-in-danger 1.5s 1;
 	-moz-animation: fade-in-danger 1.5s 1;

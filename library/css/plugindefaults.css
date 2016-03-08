@@ -1,5 +1,11 @@
+.cms-zone {
+  outline: dotted 3px rgba(0, 0, 0, 0.25);
+  outline-offset: 5px;
+  min-height: 200px; }
+
 .cms-plugin-container {
-  outline: solid 1px rgba(0, 0, 0, 0.15); }
+  outline: solid 1px rgba(0, 0, 0, 0.15);
+  display: block; }
   .cms-plugin-container textarea {
     resize: none;
     margin: 0; }
@@ -17,6 +23,8 @@
     margin: 0;
     padding: 0;
     outline: none; }
+  .cms-plugin-container select.cms-select:active {
+    background-color: #eee; }
   .cms-plugin-container input.cms-input-invisible {
     display: block;
     background: transparent;

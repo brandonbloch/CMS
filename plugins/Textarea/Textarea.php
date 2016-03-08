@@ -10,13 +10,11 @@ class Textarea extends CMS\Plugin {
 
 	private $content;
 
-	protected function initialize() {}
-
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
-	public function setContent($content) {
+	public function setContent(string $content) {
 		if (CMS\Library\Validate::HTML($content, true)) {
 			$this->content = $content;
 		} else {
@@ -24,23 +22,22 @@ class Textarea extends CMS\Plugin {
 		}
 	}
 
-	protected function getValuesAsArray() {
-		$values = array(
+	protected function getValuesAsArray(): array {
+		return [
 			"pluginVersion" => self::$pluginVersion,
 			"content" => $this->content,
-		);
-		return $values;
+		];
 	}
 
 	protected function setValuesWithArray(array $values) {
 		$this->setContent($values["content"]);
 	}
 
-	public function getPublicVersion() {
+	public function getPublicVersion(): string {
 		return CMS\Library\Markdown::parse($this->content);
 	}
 
-	public function getEditableVersion() {
+	public function getEditableVersion(): string {
 		$instanceNumber = $this->getPluginInstanceNumber();
 		$string = '<div class="textarea-form-container">' . PHP_EOL;
 		$string .= '<textarea name="textarea-' . $instanceNumber . '-content" class="cms-textarea-invisible">' . $this->content . '</textarea>' . PHP_EOL;

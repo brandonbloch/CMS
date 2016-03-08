@@ -2,24 +2,37 @@
 
 namespace CMS\Library;
 
-class MessageCollector implements \IteratorAggregate, \Countable {
+class MessageList implements \IteratorAggregate, \Countable {
 
-	private $level = 0;
-	private $messages = array();
+	private $level;
+	private $messages;
 
 	const INFO = 1;
 	const SUCCESS = 2;
 	const WARNING = 4;
 	const DANGER = 8;
 
-	private static $levels = array(
+	private static $levels = [
 		self::INFO => "info",
 		self::SUCCESS => "success",
 		self::WARNING => "warning",
 		self::DANGER => "danger",
-	);
+	];
 
-	public function addMessage($message, $level) {
+	public function __construct() {
+		$this->level = 0;
+		$this->messages = [];
+	}
+
+	/**
+	 * Add a new message to the MessageList
+	 *
+	 * @param string $message
+	 * @param int    $level
+	 *
+	 * @return int
+	 */
+	public function addMessage(string $message, int $level): int {
 
 		if (!is_int($level)) {
 			try {
@@ -40,28 +53,30 @@ class MessageCollector implements \IteratorAggregate, \Countable {
 
 	}
 
-	public function removeMessage($index) {
-		if (array_key_exists($index, $this->messages)) {
-
-		} else {
-			throw new \BadMethodCallException("Attempt to remove non-existent message from MessageCollector.");
-		}
-	}
-
+	/**
+	 *
+	 */
 	public function reset() {
-		$this->messages = array();
+		$this->level = 0;
+		$this->messages = [];
 	}
 
-	public function hasMessages() {
+	/**
+	 * @return bool
+	 */
+	public function hasMessages(): bool {
 		return (count($this->messages) > 0) ? true : false;
 	}
 
-	public function __toString() {
+	/**
+	 * @return string
+	 */
+	public function __toString(): string {
 		if (count($this->messages) == 0) {
 			return "";
 		}
 
-		$str = '<div class="message-collector message-collector-' . self::$levels[$this->level] . '">' . PHP_EOL;
+		$str = '<div class="cms-message-list cms-message-status-' . self::$levels[$this->level] . '">' . PHP_EOL;
 		if (count($this->messages) == 1) {
 			$str .= $this->messages[0];
 		} else {
@@ -76,11 +91,17 @@ class MessageCollector implements \IteratorAggregate, \Countable {
 		return $str;
 	}
 
+	/**
+	 * @return \ArrayIterator
+	 */
 	public function getIterator() {
 		return new \ArrayIterator($this->messages);
 	}
 
-	public function count() {
+	/**
+	 * @return int
+	 */
+	public function count(): int {
 		return count($this->messages);
 	}
 }

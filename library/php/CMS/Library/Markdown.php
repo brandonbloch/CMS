@@ -9,7 +9,14 @@ class Markdown {
 	private function __construct() {}
 	private function __clone() {}
 
-	public static function parse($markdown) {
+	/**
+	 * Parse Markdown input into the corresponding HTML output
+	 *
+	 * @param string $markdown      The input Markdown
+	 *
+	 * @return string               The output HTML
+	 */
+	public static function parse(string $markdown): string {
 		if (self::$parsedownInstance === NULL) {
 			self::$parsedownInstance = new Parsedown();
 		}

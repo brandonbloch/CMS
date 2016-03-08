@@ -1,12 +1,13 @@
 <?php
 
+// TODO: start using PHP 7!
+
 namespace CMS\Library;
 
 class FileDirectory implements \SeekableIterator, \Countable {
 
 	private $directory;
-	// $files = SplFileObject[]     An array containing the files in $directory
-	private $files = array();
+	private $files = [];
 
 	private $seekableIteratorPosition;
 

@@ -9,7 +9,7 @@ abstract class Plugin implements \JsonSerializable {
 	private static $totalInstances = 0;
 	private $instanceNumber;
 
-	protected static final function getPluginName() {
+	protected static final function getPluginName(): string {
 		return self::$pluginName;
 	}
 
@@ -17,35 +17,34 @@ abstract class Plugin implements \JsonSerializable {
 		$this->initialize();
 	}
 
-	protected abstract function initialize();
+	// plugins that need to perform additional setup in their constructor should override this method
+	protected function initialize() {}
 
-	protected static final function setPluginName($name) {
-		if (Library\Validate::plainText($name)) {
-			self::$pluginName = $name;
-		} else {
+	protected static final function setPluginName(string $name) {
+		if (!Library\Validate::plainText($name)) {
 			throw new \InvalidArgumentException("Invalid plugin name supplied as argument.");
 		}
+		self::$pluginName = $name;
 	}
 
-	protected static final function getPluginVersion() {
+	protected static final function getPluginVersion(): string {
 		return self::$pluginVersion;
 	}
 
-	protected static final function setPluginVersion($version) {
-		if (Library\Validate::plainText($version)) {
-			self::$pluginVersion = $version;
-		} else {
+	protected static final function setPluginVersion(string $version) {
+		if (!Library\Validate::plainText($version)) {
 			throw new \InvalidArgumentException("Invalid plugin version value supplied as argument.");
 		}
+		self::$pluginVersion = $version;
 	}
 
-	public final function jsonSerialize() {
+	public final function jsonSerialize(): string {
 		return json_encode($this->asValuesArray(), JSON_PRETTY_PRINT);
 	}
 
-	abstract protected function getValuesAsArray();
+	abstract protected function getValuesAsArray(): array;
 
-	public final function asValuesArray() {
+	public final function asValuesArray(): array {
 		$values = $this->getValuesAsArray();
 		$class = get_class($this);
 		$parts = explode("\\", $class);
@@ -56,14 +55,15 @@ abstract class Plugin implements \JsonSerializable {
 
 	abstract protected function setValuesWithArray(array $values);
 
-	public static final function withValuesArray(array $values) {
+	public static final function withValuesArray(array $values): Plugin {
 		$pluginClass = "\\CMS\\Plugin\\" . $values["plugin"];
 		$plugin = new $pluginClass;
+		/** @var Plugin $plugin */
 		$plugin->setValuesWithArray($values);
 		return $plugin;
 	}
 	
-	public final function getPluginInstanceNumber() {
+	public final function getPluginInstanceNumber(): int {
 		if (!$this->instanceNumber) {
 			Plugin::$totalInstances++;
 			$this->instanceNumber = Plugin::$totalInstances;
@@ -81,8 +81,8 @@ abstract class Plugin implements \JsonSerializable {
 		return false;
 	}
 
-	abstract public function getPublicVersion();
+	abstract public function getPublicVersion(): string;
 
-	abstract public function getEditableVersion();
+	abstract public function getEditableVersion(): string;
 
 }

@@ -149,7 +149,7 @@ class User {
 	 * @throws \Exception
 	 */
 	public static function getAll() {
-		$userObjs = array();
+		$userObjs = [];
 		try {
 			$pdo = DB::getHandle();
 			$stmt = $pdo->query("SELECT pid, username, email FROM users ORDER BY username ASC");
@@ -174,7 +174,7 @@ class User {
 	 * @param string $password              the account password
 	 * @param int $admin (optional)         the account admin status (0 if omitted)
 	 *
-	 * @throws InvalidArgumentException     if any of the above parameters are invalid
+	 * @throws \InvalidArgumentException     if any of the above parameters are invalid
 	 *
 	 * @return User                         the newly created User
 	 */
@@ -224,7 +224,7 @@ class User {
 			$stmt->bindParam(":pid", $this->pid);
 			$stmt->execute();
 			return true;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			return false;
 		}
 	}
@@ -419,7 +419,7 @@ class User {
 	 *
 	 * @param string $email         The email address to use
 	 *
-	 * @throws InvalidArgumentException     if the email address provided is invalid
+	 * @throws \InvalidArgumentException     if the email address provided is invalid
 	 */
 	public function setEmail($email) {
 		if (Library\Validate::email($email)) {

@@ -1,21 +1,6 @@
 @charset "UTF-8";
 
-$adminBarBackground: #000;
-$adminBarButtonColor: #999;
-$adminBarHoverColor: #eee;
-$adminBarActiveButtonColor: #ccc;
-$adminBarActiveButtonBackground: #444;
-$adminBarActiveHoverColor: $adminBarActiveButtonColor;
-
-$adminPageBackground: #fff;
-$adminPageBorders: #999;
-$adminPageText: #333;
-$adminPageLinks: #cc3200;
-
-$messageCollectorSuccess: #349b54;
-$messageCollectorInfo: #2b80b5;
-$messageCollectorWarning: #d9880d;
-$messageCollectorDanger: $adminPageLinks;
+@import 'variables';
 
 body.logged-in {
 	margin-bottom: 36px !important;
@@ -297,6 +282,10 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 		background-position: right 9px;
 	}
 
+	select:active {
+		background-color: #eee;
+	}
+
 	label {
 		display: block;
 		padding-left: 6px;
@@ -418,7 +407,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 			margin-left: -170px;
 		}
 
-		.message-collector {
+		.cms-message-list {
 			margin-left: -170px;
 		}
 
@@ -430,7 +419,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 		h2,
 		label,
 		button[type="submit"],
-		.message-collector,
+		.cms-message-list ,
 		.input-replacement {
 			margin-left: 0;
 		}
@@ -515,6 +504,9 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 .cms-themes-list .theme-preview {
 	width: 225px;
 	height: 150px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 #page_nav_display,

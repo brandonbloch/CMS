@@ -226,6 +226,8 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='20px' width='25px'><text x='0' y='15' fill='#666' font-size='1rem'>&#9660;</text></svg>");
   background-repeat: no-repeat;
   background-position: right 9px; }
+.cms-form select:active {
+  background-color: #eee; }
 .cms-form label {
   display: block;
   padding-left: 6px; }
@@ -280,14 +282,14 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
       .cms-admin-table .actions-list a:last-child {
         margin-right: 0; }
 
-.message-collector {
+.cms-message-list {
   display: block;
   margin-bottom: 30px; }
-  .message-collector ul {
+  .cms-message-list ul {
     padding-left: 20px;
     margin: 0; }
 
-.message-collector:empty {
+.cms-message-list:empty {
   display: none !important; }
 
 @-webkit-keyframes fade-in {
@@ -318,7 +320,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   to {
     color: #fff;
     background-color: #2b80b5; } }
-.message-collector {
+.cms-message-list {
   background-color: #2b80b5;
   color: #fff;
   padding: 0.7rem 0.9rem 0.7rem 0.9rem;
@@ -329,7 +331,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   -o-animation: fade-in 1.5s 1;
   animation: fade-in 1.5s 1; }
 
-.message-collector ul {
+.cms-message-list ul {
   list-style: disc;
   padding-left: 1.4rem;
   margin: 0; }
@@ -362,7 +364,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   to {
     color: #fff;
     background-color: #349b54; } }
-.message-collector-success {
+.cms-message-status-success {
   background-color: #349b54;
   -webkit-animation: fade-in-success 1.5s 1;
   -moz-animation: fade-in-success 1.5s 1;
@@ -397,7 +399,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   to {
     color: #fff;
     background-color: #d9880d; } }
-.message-collector-warning {
+.cms-message-status-warning {
   background-color: #d9880d;
   -webkit-animation: fade-in-warning 1.5s 1;
   -moz-animation: fade-in-warning 1.5s 1;
@@ -432,7 +434,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   to {
     color: #fff;
     background-color: #cc3200; } }
-.message-collector-danger {
+.cms-message-status-danger {
   background-color: #cc3200;
   -webkit-animation: fade-in-danger 1.5s 1;
   -moz-animation: fade-in-danger 1.5s 1;
@@ -455,7 +457,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
       margin-left: 0; }
     .cms-form button[type="submit"] {
       margin-left: -170px; }
-    .cms-form .message-collector {
+    .cms-form .cms-message-list {
       margin-left: -170px; }
 
   .no-label-form {
@@ -464,7 +466,7 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
     .no-label-form h2,
     .no-label-form label,
     .no-label-form button[type="submit"],
-    .no-label-form .message-collector,
+    .no-label-form .cms-message-list,
     .no-label-form .input-replacement {
       margin-left: 0; }
 
@@ -532,7 +534,10 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
 
 .cms-themes-list .theme-preview {
   width: 225px;
-  height: 150px; }
+  height: 150px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center; }
 
 #page_nav_display,
 #page_url_display {
