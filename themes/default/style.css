@@ -2,10 +2,17 @@ body {
   font-family: "Book Antiqua", Palatino, "Palatino Linotype", Georgia, serif;
   background-image: url("background.png");
   background-attachment: fixed;
-  background-color: #333;
+  background-color: #ececec;
   padding: 6rem 2rem 2rem;
   font-size: 1.1rem;
-  position: relative; }
+  position: relative;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 1em;
+  margin-bottom: 1em; }
 
 header {
   position: fixed;
@@ -17,7 +24,8 @@ header {
   background-color: #222a4e;
   padding: 0.6rem;
   font-size: 1.25rem;
-  color: #fff; }
+  color: #fff;
+  z-index: 9999; }
   header h1 {
     margin: 0 0 0 18px; }
     header h1 a {
@@ -29,12 +37,14 @@ header {
     margin-right: 0.4rem; }
     header ul li {
       display: inline-block;
-      margin-right: 0.8rem; }
+      margin-right: 0.8rem;
+      position: relative; }
       header ul li ul {
         position: absolute;
-        right: 0;
         top: 100%;
-        margin: -20px 0 0;
+        left: auto;
+        right: 0;
+        margin: 0;
         padding: 30px 10px 10px;
         text-align: right;
         display: none;
@@ -42,6 +52,9 @@ header {
         header ul li ul li {
           display: block;
           margin-right: 0; }
+          header ul li ul li a {
+            display: block;
+            white-space: nowrap; }
         header ul li ul:hover, header ul li ul:focus {
           display: block; }
       header ul li a {
@@ -59,10 +72,12 @@ footer {
   color: #fff;
   display: block;
   min-height: 100px;
+  width: 200px;
   padding: 1em; }
 
-.sidebar .cms-zone {
-  outline-color: rgba(255, 255, 255, 0.35); }
+.sidebar .cms-zone,
+.sidebar .cms-plugin-container {
+  border-color: rgba(255, 255, 255, 0.35); }
 
 @media all and (min-width: 768px) {
   .page {
@@ -79,5 +94,7 @@ footer {
 
   .sidebar-left {
     margin-right: 1em; } }
+.sidebar .cms-plugin-preview {
+  background-color: #000; }
 
 /*# sourceMappingURL=style.css.map */

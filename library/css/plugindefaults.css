@@ -1,11 +1,12 @@
 .cms-zone {
-  outline: dotted 3px rgba(0, 0, 0, 0.25);
-  outline-offset: 5px;
   min-height: 200px; }
 
+.cms-zone-drop {
+  border: dotted 2px rgba(0, 0, 0, 0.25); }
+
 .cms-plugin-container {
-  outline: solid 1px rgba(0, 0, 0, 0.15);
-  display: block; }
+  display: block;
+  position: relative; }
   .cms-plugin-container textarea {
     resize: none;
     margin: 0; }
@@ -27,27 +28,58 @@
     background-color: #eee; }
   .cms-plugin-container input.cms-input-invisible {
     display: block;
-    background: transparent;
-    border: none;
+    background-color: transparent;
+    color: inherit;
     font: inherit;
-    font-weight: bold;
     width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 0;
     margin: 0;
+    padding: 0;
+    border: none;
     outline: none; }
   .cms-plugin-container textarea.cms-textarea-invisible {
     display: block;
+    background-color: transparent;
+    color: inherit;
     font: inherit;
     width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 0;
+    padding: 0;
     border: none;
-    background-color: transparent;
     outline: none; }
+
+.cms-plugin-controls {
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  display: none; }
+  .cms-plugin-controls > i {
+    display: inline-block;
+    font-size: 1.5em;
+    width: 1em;
+    text-align: center;
+    margin: 0;
+    padding: 0; }
+
+.cms-plugin-drag-handle {
+  cursor: all-scroll; }
+
+.cms-plugin-container:hover .cms-plugin-controls {
+  display: block; }
+
+.cms-plugin-dragged .cms-plugin-controls {
+  opacity: 0 !important; }
+
+.cms-plugin-preview {
+  opacity: 0.4; }
+  .cms-plugin-preview .cms-plugin-controls {
+    display: none !important; }
 
 /*# sourceMappingURL=plugindefaults.css.map */

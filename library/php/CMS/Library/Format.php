@@ -31,12 +31,13 @@ class Format {
 	 * @return string           An ordinal suffix appended to the integer
 	 */
 	public static function ordinal(int $int): string {
-		$mod100 = abs($int) % 100;
+		$abs = abs($int);
+		$mod100 = $abs % 100;
 		$ends   = ["th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th"];
 		if (($mod100) > 10 && ($mod100) < 14) {
 			return $int . "th";
 		}
-		return $int . $ends[abs($int) % 10];
+		return $int . $ends[$abs % 10];
 	}
 
 	/**
@@ -67,13 +68,13 @@ class Format {
 		if($diff == 0) {
         	return 'Now';
 		} else if($diff > 0) {
-			$day_diff = floor($diff / 86400);
+			$day_diff = intdiv($diff, 86400);
 			if($day_diff == 0) {
 				if($diff < 60) return 'Just now';
 				if($diff < 120) return '1 minute ago';
-				if($diff < 3600) return floor($diff / 60) . ' minutes ago';
+				if($diff < 3600) return intdiv($diff, 60) . ' minutes ago';
 				if($diff < 7200) return '1 hour ago';
-				if($diff < 86400) return floor($diff / 3600) . ' hours ago';
+				if($diff < 86400) return intdiv($diff, 3600) . ' hours ago';
 			}
 			if($day_diff == 1) return 'Yesterday';
 			if($day_diff < 7) return $day_diff . ' days ago';
@@ -83,12 +84,12 @@ class Format {
 			return date('F Y', $ts);
 		} else {
 			$diff = abs($diff);
-			$day_diff = floor($diff / 86400);
+			$day_diff = intdiv($diff, 86400);
 			if($day_diff == 0) {
 				if($diff < 120) return 'In a minute';
-				if($diff < 3600) return 'In ' . floor($diff / 60) . ' minutes';
+				if($diff < 3600) return 'In ' . intdiv($diff, 60) . ' minutes';
 				if($diff < 7200) return 'In an hour';
-				if($diff < 86400) return 'In ' . floor($diff / 3600) . ' hours';
+				if($diff < 86400) return 'In ' . intdiv($diff, 3600) . ' hours';
 			}
 			if($day_diff == 1) return 'Tomorrow';
 			if($day_diff < 4) return date('l', $ts);
@@ -108,16 +109,11 @@ class Format {
 	 * @return string           The formatted size
 	 */
 	public static function bytes(int $size, int $precision = 2): string {
-		try {
-			$size = (int) $size;
-		} catch (\Exception $e) {
-			throw new \InvalidArgumentException("Expected integer filesize, got " . gettype($size) . " instead.");
-		}
 		$prefixes = ["bytes", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 		$magnitude = 0;
 		while ($size >= 1024 || $size <= -1024) {
 			$size = $size / 1024;
-			$magnitude ++;
+			$magnitude++;
 		}
 		if (!array_key_exists($magnitude, $prefixes)) {
 			throw new \OutOfRangeException("The filesize is too large to format.");
@@ -149,12 +145,20 @@ class Format {
 	 * @return string               The string with smart quotes converted to straight quotes
 	 */
 	public static function convertSmartQuotes(string $string): string {
-		// TODO include quotes from other languages?
+		// TODO include quotation marks from other languages?
 		$search = ["“", "”", "‘", "’"];
 		$replace = ["\"", "\"", "'", "'"];
 		return str_replace($search, $replace, $string);
 	}
 
+	/**
+	 * Add a class to a pre-existing string of classes, for output in HTML tags.
+	 *
+	 * @param string $classes       The current class string
+	 * @param string $class         The class name to append
+	 *
+	 * @return string               The new class string with $class added
+	 */
 	public static function addClass(string $classes, string $class): string {
 		if ($classes == "") {
 			return $class;
@@ -162,7 +166,29 @@ class Format {
 		if (!$class) {
 			return $classes;
 		}
+		// TODO prevent duplicate re-adding of a class?
+		// (would need to do a regex to match the whole name only, and not part of another class)
 		return $classes . " " . $class;
+	}
+
+	/**
+	 * Remove a class from a pre-existing string of classes, for output in HTML tags.
+	 *
+	 * @param string $classes       The current class string
+	 * @param string $class         The class name to remove
+	 *
+	 * @return string               The new class string with $class removed
+	 */
+	public function removeClass(string $classes, string $class): string {
+		if ($classes == "") {
+			return $classes;
+		}
+		if (!$class) {
+			return $classes;
+		}
+		$classes = str_replace($class, "", $classes);
+		$classes = str_replace("  ", " ", $classes);
+		return $classes;
 	}
 	
 }

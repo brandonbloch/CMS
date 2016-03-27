@@ -192,12 +192,12 @@ class Auth {
 				return "You have been logged out due to 1 minute of inactivity.";
 			}
 			if (SESSION_IDLE_TIME < 3600) {
-				return "You have been logged out due to " . floor(SESSION_IDLE_TIME / 60) . " minutes of inactivity.";
+				return "You have been logged out due to " . intdiv(SESSION_IDLE_TIME, 60) . " minutes of inactivity.";
 			}
 			if (SESSION_IDLE_TIME < 7200) {
 				return "You have been logged out due to 1 hour of inactivity.";
 			}
-			return "You have been logged out due to " . floor(SESSION_IDLE_TIME / 3600) . " hours of inactivity.";
+			return "You have been logged out due to " . intdiv(SESSION_IDLE_TIME, 3600) . " hours of inactivity.";
 		} else {
 			return "";
 		}
@@ -282,10 +282,7 @@ class Auth {
 	 */
 	public static function passMatch($password1, $password2) {
 		self::initialize();
-		if (Library\Validate::password($password1) === false) {
-			return false;
-		}
-		if (Library\Validate::password($password2) === false) {
+		if (Library\Validate::password($password1) === false || Library\Validate::password($password2) === false) {
 			return false;
 		}
 		return ($password1 === $password2);

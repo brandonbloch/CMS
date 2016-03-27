@@ -57,7 +57,7 @@ if (isset($_POST["page_add_submit"])) {
 	}
 
 	if ($continue) {
-		$page = CMS\Page::create("default", $data["parent_page"], $data["page_visibility"], $data["page_title"], $data["page_shortname"], $slug);
+		$page = CMS\Page::create($data["page_type"], $data["parent_page"], $data["page_visibility"], $data["page_title"], $data["page_shortname"], $slug);
 		CMS\Browser::redirect($page->getURL());
 	}
 

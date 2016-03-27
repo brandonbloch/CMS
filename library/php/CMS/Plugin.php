@@ -38,8 +38,8 @@ abstract class Plugin implements \JsonSerializable {
 		self::$pluginVersion = $version;
 	}
 
-	public final function jsonSerialize(): string {
-		return json_encode($this->asValuesArray(), JSON_PRETTY_PRINT);
+	public final function jsonSerialize(): array {
+		return $this->asValuesArray();
 	}
 
 	abstract protected function getValuesAsArray(): array;

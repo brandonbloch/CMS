@@ -14,6 +14,10 @@ class Core {
 		echo 'autosize(textareas);' . PHP_EOL;
 		echo 'autosize.destroy(document.querySelectorAll(\'.no-autosize\'));' . PHP_EOL;
 		echo '</script>' . PHP_EOL;
+		if (isset($_GET["edit"])) {
+			echo '<script src="' . Site::getBaseURL() . '/library/js/sortable-js/Sortable.js"></script>' . PHP_EOL;
+			include "library/js/zones-js.php";
+		}
 	}
 
 }

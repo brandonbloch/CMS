@@ -537,8 +537,12 @@ class Page extends ActiveRecordAbstract {
 		$this->content = $content;
 	}
 
+	public function getZoneCount(): int {
+		return Pages::getPageType($this->pageType)["zones"];
+	}
+
 	public function getZoneOutput(int $zone): string {
-		$output = '<div class="cms-zone cms-zone-' . $zone . '">' . PHP_EOL;
+		$output = '<div class="cms-zone" id="cms-zone-' . $zone . '">' . PHP_EOL;
 		if (isset($_GET["edit"]) && !isset($_GET["settings"])) {
 			$output .= $this->getEditableZoneOutput($zone);
 		} else {
@@ -565,10 +569,16 @@ class Page extends ActiveRecordAbstract {
 			return "";
 		}
 		$output = "";
+		// TODO put the stylesheets in the header, in the right order, via a Theme or Core function
+		// (make sure they get included before the theme's stylesheet, to allow overrides)
 		$output .= '<link rel="stylesheet" property="stylesheet" href="' . Site::getBaseURL() . '/library/css/plugindefaults.css">' . PHP_EOL;
 		foreach ($this->content[$zone] as $plugin) {
 			/** @var Plugin $plugin */
 			$output .= '<div class="cms-plugin-container">' . PHP_EOL;
+			// plugin drag/drop controls
+			$output .= '<div class="cms-plugin-controls">' . PHP_EOL;
+			$output .= '<i class="cms-plugin-drag-handle fa fa-bars"></i>' . PHP_EOL;
+			$output .= '</div>' . PHP_EOL;
 			$stylesheet = $plugin->getEditableStylesheet();
 			if ($stylesheet) {
 				$output .= '<link rel="stylesheet" property="stylesheet" href="' . $stylesheet . '">' . PHP_EOL;

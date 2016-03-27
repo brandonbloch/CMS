@@ -89,10 +89,7 @@ class Validate {
 		if (empty($name) || is_null($name)) {
 			return false;
 		}
-		if (trim($name) === "") {
-			return false;
-		}
-		if ($name !== strip_tags($name)) {
+		if (trim($name) === "" || $name !== strip_tags($name)) {
 			return false;
 		}
 		// TODO allow more inclusive international names
@@ -110,10 +107,7 @@ class Validate {
 		if (empty($email) || is_null($email)) {
 			return false;
 		}
-		if (trim($email) === "") {
-			return false;
-		}
-		if ($email !== strip_tags($email)) {
+		if (trim($email) === "" || $email !== strip_tags($email)) {
 			return false;
 		}
 		return filter_var($email, FILTER_VALIDATE_EMAIL) ? true : false;
@@ -130,10 +124,7 @@ class Validate {
 		if (empty($url) || is_null($url)) {
 			return false;
 		}
-		if (trim($url) === "") {
-			return false;
-		}
-		if ($url !== strip_tags($url)) {
+		if (trim($url) === "" || $url !== strip_tags($url)) {
 			return false;
 		}
 		return filter_var($url, FILTER_VALIDATE_URL) ? true : false;
@@ -151,10 +142,7 @@ class Validate {
 		if (empty($username) || is_null($username)) {
 			return false;
 		}
-		if (trim($username) === "") {
-			return false;
-		}
-		if ($username !== strip_tags($username)) {
+		if (trim($username) === "" || $username !== strip_tags($username)) {
 			return false;
 		}
 		if (mb_strlen($username) < self::USERNAME_MIN_LENGTH) {
@@ -174,10 +162,7 @@ class Validate {
 		if (empty($password) || is_null($password)) {
 			return false;
 		}
-		if (trim($password) === "") {
-			return false;
-		}
-		if ($password !== strip_tags($password)) {
+		if (trim($password) === "" || $password !== strip_tags($password)) {
 			return false;
 		}
 		if (mb_strlen($password) < self::PASSWORD_MIN_LENGTH) {

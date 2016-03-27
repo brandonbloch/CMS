@@ -1,3 +1,11 @@
+body.cms-admin-page {
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important; }
+
 body.logged-in {
   margin-bottom: 36px !important; }
 
@@ -180,6 +188,9 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   opacity: 0.5;
   cursor: not-allowed; }
 
+a.disabled {
+  color: #666 !important; }
+
 .cms-form input[type="text"],
 .cms-form input[type="email"],
 .cms-form textarea,
@@ -269,7 +280,8 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
   .cms-admin-table .actions-list {
     text-align: right;
     padding-left: 0;
-    padding-right: 5px; }
+    padding-right: 5px;
+    opacity: 0.25; }
     .cms-admin-table .actions-list a {
       display: inline-block;
       font-size: 22px;
@@ -281,6 +293,8 @@ body.cms-page-settings .admin-bar .admin-bar-button-page-settings {
       margin-right: 14px; }
       .cms-admin-table .actions-list a:last-child {
         margin-right: 0; }
+  .cms-admin-table tbody tr:hover .actions-list {
+    opacity: 1; }
 
 .cms-message-list {
   display: block;

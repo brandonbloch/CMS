@@ -2,8 +2,8 @@
 
 .heading-form-container {
 	position: relative;
-	margin-top: 1em;
-	margin-bottom: 1em;
+	padding-top: 1em;
+	padding-bottom: 1em;
 }
 
 .heading-form-container.heading-level-1 {
@@ -27,8 +27,8 @@
 
 .heading-form-container select.cms-select {
 	position: absolute;
-	top: -1px;
-	bottom: -1px;
+	top: 1em;
+	bottom: 1em;
 	left: -1px;
 	display: block;
 	width: 5rem;
@@ -38,6 +38,6 @@
 }
 
 .heading-form-container input.cms-input-invisible {
-	margin-left: 5rem;
-	padding-left: 0.5rem;
+	padding-left: 5.5rem !important;
+	font-weight: bold !important;
 }

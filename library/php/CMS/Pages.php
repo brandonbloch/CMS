@@ -24,7 +24,7 @@ class Pages {
 	/**
 	 * @return Page
 	 */
-	public static function getCurrentPage(): Page {
+	public static function getCurrentPage() {
 		return self::$currentPage;
 	}
 
@@ -190,7 +190,7 @@ class Pages {
 			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '&settings" title="' . Localization::getLocalizedString(Localization::LABEL_PAGE_SETTINGS) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_PAGE_SETTINGS) . '"></i></a>';
 			$string .= '<a href="' . Site::getBaseURL() . '?edit=' . $page->getID() . '" title="' . Localization::getLocalizedString(Localization::LABEL_EDIT_PAGE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_EDIT_PAGE) . '"></i></a>';
 			if ($page->isHomepage()) {
-				$string .= '<a disabled title="' . Localization::getLocalizedString(Localization::LABEL_HOMEPAGE_NO_DELETE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_DELETE_PAGE) . '"></i></a>';
+				$string .= '<a class="disabled" title="' . Localization::getLocalizedString(Localization::LABEL_HOMEPAGE_NO_DELETE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			} else {
 				$string .= '<a href="' . Site::getBaseURL() . '?delete=' . $page->getID() . '" title="' . Localization::getLocalizedString(Localization::LABEL_DELETE_PAGE) . '"><i class="fa fa-' . Localization::getLocalizedString(Localization::ICON_DELETE_PAGE) . '"></i></a>';
 			}
